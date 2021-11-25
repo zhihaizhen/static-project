@@ -1,0 +1,1916 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <!-- <link data-th-href="@{/public/layui/css/layui.css}" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" data-th-href="@{/js/exchange/joyin/common.css}">
+    <link rel="stylesheet" href="../../../js/exchange/joyin/select2.min.css" media="all">
+    <link rel="stylesheet" href="../../../js/exchange/joyin/lightblue.css" media="all">
+    <link rel="icon" href="../../../js/exchange/joyin/favicon.ico" type="image/x-icon"> -->
+
+    <link rel="stylesheet" href="../static/layui/css/layui.css" />
+    <link rel="stylesheet" href="../static/joyin/select2.min.css" media="all">
+    <link rel="stylesheet" href="../static/joyin/common.css" media="all">
+    <link rel="stylesheet" href="../static/joyin/lightblue.css" media="all">
+    <link rel="icon" href="../static/joyin/favicon.ico" type="image/x-icon">
+
+    <title>场内交易</title>
+</head>
+<body>
+
+    <div id="content-body" class="content-body">
+
+        <div id="content-root" class="content-root">
+
+            <!-- 工具栏 -->
+
+            <div id="toolbar" class="tool-panel">
+
+                <form class="form-query-instruc layui-form" lay-filter="form-query-instruc" action="" onkeydown="if(event.keyCode==13){return false}"> 
+                    <div class="layui-form-item">
+                        <!-- <div class="layui-inline">
+                            <select id="instruct-status-select" lay-filter="instruct-status-select" lay-verify="required">
+                                <option value="01">全部指令</option>
+                                <option value="02">待接收指令</option>
+                                <option value="28">指令未完成</option>
+                                <option value="29">指令已完成</option>
+                                <option value="30">成交未完成</option>
+                                <option value="04">成交已完成</option>
+                            </select>
+                        </div> -->
+
+                        <div class="layui-inline checkbox-instruc-style" id="instruc-checkbox">
+                            <input type="checkbox" name="checkbox-instruc" lay-filter="checkbox-instruc" lay-skin="primary" value="01" title="全部" checked>
+                            <input type="checkbox" name="checkbox-instruc" lay-filter="checkbox-instruc" lay-skin="primary" value="02" title="未接收" checked>
+                            <input type="checkbox" name="checkbox-instruc" lay-filter="checkbox-instruc" lay-skin="primary" value="03" title="待执行" checked>
+                            <input type="checkbox" name="checkbox-instruc" lay-filter="checkbox-instruc" lay-skin="primary" value="04" title="已执行" checked>
+                            <input type="checkbox" name="checkbox-instruc" lay-filter="checkbox-instruc" lay-skin="primary" value="06" title="已完成" checked>
+                            <input type="checkbox" name="checkbox-instruc" lay-filter="checkbox-instruc" lay-skin="primary" value="05" title="无效" checked>
+                        </div> 
+                        <div class="layui-inline">
+                            <input type="checkbox" id="switch-quick-order" name="switch" lay-filter="switch-quick-order" lay-skin="switch" lay-text="快速交易|快速交易">
+                        </div>
+                        <div class="layui-inline">
+                            <input type="text" id="keywords-instruc" name="keyWords" lay-filter="keywords-instruc" autocomplete="off" class="layui-input" placeholder="关键字搜索" >
+                        </div>
+                        <div class="layui-inline">
+                            <button type="button" id="quick-btn-receive" class="layui-btn layui-btn-normal layui-btn-sm">批量接收</button>
+                            <button type="button" id="quick-btn-release" class="layui-btn layui-btn-normal layui-btn-sm">批量放弃</button>
+                            <button type="button" id="quick-btn-order" class="layui-btn layui-btn-normal layui-btn-sm">批量下单</button>
+                            <button type="button" id="quick-btn-export" class="layui-btn layui-btn-normal layui-btn-sm">导出</button>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="instruc-toolkit" id="user-toolkit-1">
+                    <span class="refresh-time"></span>
+                    <a class="layui-icon layui-icon-refresh-3" title="刷新"></a>
+                </div>
+
+            </div>
+
+            <!-- 已接收指令列表 -->
+
+            <div id="table-instruction" class="top-panel">
+
+                <table>
+                    <tbody>
+                        <tr>
+                            <td type="check" label="序号" min-width="50" fixed></td>
+                            <td label="指令状态" prop="instrucStatus" min-width="80" formatter="formatInstrucStatus" sortable overflowt fixed></td>
+                            <td label="指令进度" prop="progress" min-width="110" formatter="formatInstrucProgress" export-formatter="formatInstrucProgressText" sortable overflowt fixed></td>
+                            <td label="成交进度" prop="dealProgress" min-width="110" formatter="formatDealProgress" export-formatter="formatDealProgressText" sorting-method="sortByDealProgress" sortable overflowt fixed></td>
+                            <td label="组合名称" prop="portfolioName" min-width="140" sortable searchable overflowt></td>
+                            <td label="资金账号" prop="tradeAccountId" min-width="90" sortable searchable overflowt></td>
+                            <td label="资金账号名称" prop="accountBelongerName" min-width="160" sortable searchable overflowt></td>
+                            <td label="投资经理" prop="managerId" min-width="80" sortable searchable overflowt></td>
+                            <td label="资产名称" prop="stockName" min-width="120" sortable searchable overflowt></td>
+                            <td label="资产代码" prop="stockCode" min-width="110" formatter="formatUnusualVal" sortable searchable overflowt></td>
+                            <td label="资产类型" prop="assetType" min-width="90" formatter="formatAssetType" sortable overflowt></td>
+                            <td label="交易平台" prop="tradePlat" min-width="130" formatter="formatPlatform" sortable overflowt></td>
+                            <td label="委托方向" prop="direction" min-width="120" formatter="formatInstrucDirection" sortable overflowt></td>
+                            <td label="价格模式" prop="priceMode" min-width="80" formatter="formatPriceMode" sortable overflowt></td>
+                            <td label="指令价格" prop="price" min-width="80" align="right" formatter="formatPrice" sortable overflowt></td>
+                            <td label="剩余数量" prop="leftVolume" min-width="90" align="right" thousands-int sortable overflowt></td>
+                            <td label="指令数量" prop="volume" min-width="90" align="right" thousands-int sortable overflowt></td>
+                            <td label="剩余金额" prop="leftAmount" min-width="110" align="right" thousands sortable overflowt></td>
+                            <td label="指令金额" prop="amount" min-width="110" align="right" thousands sortable overflowt></td>
+                            <td label="指令开始" prop="startDate" min-width="90" formatter="formatDate" sortable overflowt></td>
+                            <td label="指令结束" prop="endDate" min-width="90" formatter="formatDate" sortable overflowt></td>
+                            <td label="指令编号" prop="id" min-width="180" sortable searchable overflowt></td>
+                            <td label="操作" watch="instrucStatus, progress" min-width="60" formatter="formatInstrucRowAction" fixed="right" exportable="false"></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+            </div>
+            
+            <div id="bottom-panel">
+
+                <!-- 指令详情 -->
+
+                <div id="detail-panel" class="detail-panel">
+
+                    <a id="expander" class="expander"><i class="layui-icon layui-icon-down"></i></a>
+                    <div id="detail-guideline" class="detail-guideline layui-elem-quote">请点选一个指令，进行交易</div>
+                    <div id="detail-panel-inner" class="detail-panel-inner">
+                        <!-- controls placeholder -->
+                    </div>
+
+                </div>
+
+                <!-- 交易画面 -->
+
+                <div id="slides-panel" class="slides-panel" style="visibility: hidden;">
+                    
+                    <!-- 左侧交易区域 -->
+            
+                    <div id="bottom-left-panel" class="bottom-left-panel layui-tab layui-tab-card" lay-filter="unit-list-tab">
+                            
+                        <ul class="layui-tab-title">
+                        
+                            <li id="tab-normal" class="layui-this">普通交易</li>
+                            <li id="tab-future">期货交易</li>
+                            <li id="tab-option">期权交易</li>
+                            <li id="tab-batch">批量交易</li>
+                            <li id="tab-equal">公平交易</li>
+                            <li id="tab-algorithm">算法交易</li>
+                            <li id="tab-apply">申购认购大类交易</li>
+                            <li id="tab-scale">大宗交易</li>
+                            <li id="tab-repo">协议回购</li>
+                            <li id="tab-pledge">质押出入库</li>
+                            <li id="tab-constr">固定收益</li>
+                            <li id="tab-basket">篮子交易</li>
+        
+                        </ul>
+                
+                        <div id="tab-content-bl" class="layui-tab-content">
+                            
+                            <!-- 普通交易，交易画面 -->
+                
+                            <div id="tab-content-normal" class="layui-tab-item">
+                                
+                                <!-- level2行情面板，占位符 -->
+        
+                                <!-- 普通交易，下单参数 -->
+        
+                                <div class="ordering-param-panel">
+        
+                                    <form class="form-normal layui-form" lay-filter="form-normal" action="">
+                                        
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">组合名称</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="portfolioName" maxlength="15" lay-verify="required" autocomplete="off" class="layui-input layui-disabled" readonly>
+                                            </div>
+                                        </div>
+        
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">资金账号</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="accountName" maxlength="15" lay-verify="required" autocomplete="off" class="layui-input layui-disabled" readonly>
+                                            </div>
+                                        </div>
+        
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">资产名称</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="stockCodeName" maxlength="15" lay-verify="required" autocomplete="off" class="layui-input layui-disabled" readonly>
+                                            </div>
+                                        </div>
+        
+                                        <div class="layui-form-item direction">
+                                            <label class="layui-form-label">委托方向</label>
+                                            <div class="layui-input-block">
+                                                <select name="direction" lay-verify="required"></select>
+                                            </div>
+                                        </div>
+        
+                                        <div class="layui-form-item price-mode">
+                                            <label class="layui-form-label">价格类型</label>
+                                            <div class="layui-input-block">
+                                                <select name="priceMode" lay-verify="required"></select>
+                                            </div>
+                                        </div>
+        
+                                        <div class="layui-form-item repo-rate">
+                                            <label class="layui-form-label">回购利率</label>
+                                            <div class="layui-input-block">
+                                                <div class="number-ctr">
+                                                    <button type="button" class="decrease-button">-</button>
+                                                    <input type="text" name="price" tabindex="1" maxlength="10" lay-verify="repoRate4Normal" autocomplete="off" class="layui-input">
+                                                    <button type="button" class="increase-button">+</button>
+                                                </div>
+                                            </div>
+                                        </div>
+        
+                                        <div class="layui-form-item price">
+                                            <label class="layui-form-label">委托价格</label>
+                                            <div class="layui-input-block">
+                                                <div class="number-ctr">
+                                                    <button type="button" class="decrease-button">-</button>
+                                                    <input type="text" name="price" tabindex="1" maxlength="10" lay-verify="price4Normal" autocomplete="off"  class="layui-input">
+                                                    <button type="button" class="increase-button">+</button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="layui-form-item full-price">
+                                            <label class="layui-form-label">全价价格</label>
+                                            <div class="layui-input-block">
+                                                <div class="number-ctr">
+                                                    <button type="button" class="decrease-button">-</button>
+                                                    <input type="text" name="fullPrice" tabindex="2" maxlength="10" lay-verify="fullPrice4Normal" autocomplete="off" class="layui-input">
+                                                    <button type="button" class="increase-button">+</button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="layui-form-item yield-rate">
+                                            <label class="layui-form-label">到期收益率</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="yieldRate" tabindex="3" maxlength="10" lay-verify="yieldRate4Normal" autocomplete="off" class="layui-input">
+                                            </div>
+                                        </div>
+        
+                                        <div class="layui-form-item volume">
+                                            <label class="layui-form-label">委托数量</label>
+                                            <div class="layui-input-block">
+                                                <div class="number-ctr">
+                                                    <button type="button" class="decrease-button">-</button>
+                                                    <input type="text" name="volume" tabindex="4" maxlength="10" lay-verify="volume4Normal" autocomplete="off" class="layui-input" value="0">
+                                                    <button type="button" class="increase-button">+</button>
+                                                </div>
+                                            </div>
+                                        </div>
+        
+                                        <div class="layui-form-item amount">
+                                            <label class="layui-form-label">委托金额</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="amount" tabindex="5" maxlength="12" lay-verify="amount4Normal" autocomplete="off" class="layui-input" value="0">
+                                            </div>
+                                        </div>
+        
+                                        <div class="layui-form-item">
+                                            <div class="layui-input-block">
+
+                                                <button type="button"
+                                                    tabindex="100"
+                                                    lay-filter="reset-form-normal" 
+                                                    class="layui-btn layui-btn-danger layui-btn-sm">重置参数</button>
+                                               
+                                                <button type="submit" 
+                                                    tabindex="99"
+                                                    lay-filter="submit-normal-form" 
+                                                    class="layui-btn layui-btn-normal layui-btn-sm" lay-submit>下单</button>
+                                            </div>
+                                            
+                                        </div>
+        
+                                    </form>
+                                </div>
+        
+                            </div>
+
+                            <!-- 期货交易，交易画面 -->
+                
+                            <div id="tab-content-future" class="layui-tab-item">
+                                
+                                <!-- level2行情面板，占位符 -->
+
+                                <!-- 期货交易，下单参数 -->
+
+                                <div class="ordering-param-panel">
+                                    
+                                    <form class="form-future layui-form" lay-filter="form-future" action="">
+                                    
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">组合名称</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="portfolioName" maxlength="15" lay-verify="required" autocomplete="off" class="layui-input layui-disabled" readonly>
+                                            </div>
+                                        </div>
+        
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">资金账号</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="accountName" maxlength="15" lay-verify="required" autocomplete="off" class="layui-input layui-disabled" readonly>
+                                            </div>
+                                        </div>
+
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">资产名称</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="stockCodeName" maxlength="15" lay-verify="required" autocomplete="off" class="layui-input layui-disabled" readonly>
+                                            </div>
+                                        </div>
+        
+                                        <div class="layui-form-item direction">
+                                            <label class="layui-form-label">委托方向</label>
+                                            <div class="layui-input-block">
+                                                <select name="direction" lay-verify="required"></select>
+                                            </div>
+                                        </div>
+        
+                                        <div class="layui-form-item price-mode">
+                                            <label class="layui-form-label">价格类型</label>
+                                            <div class="layui-input-block">
+                                                <select name="priceMode" lay-verify="required"></select>
+                                            </div>
+                                        </div>
+        
+                                        <div class="layui-form-item price">
+                                            <label class="layui-form-label">委托价格</label>
+                                            <div class="layui-input-block">
+                                                <div class="number-ctr">
+                                                    <button type="button" class="decrease-button">-</button>
+                                                    <input type="text" name="price" tabindex="1" maxlength="10" lay-verify="price4Future" autocomplete="off" class="layui-input">
+                                                    <button type="button" class="increase-button">+</button>
+                                                </div>
+                                            </div>
+                                        </div>
+    
+                                        <div class="layui-form-item volume">
+                                            <label class="layui-form-label">委托数量</label>
+                                            <div class="layui-input-block">
+                                                <div class="number-ctr">
+                                                    <button type="button" class="decrease-button">-</button>
+                                                    <input type="text" name="volume" tabindex="2" maxlength="10" lay-verify="volume4Future" autocomplete="off" class="layui-input" value="0">
+                                                    <button type="button" class="increase-button">+</button>
+                                                </div>
+                                            </div>
+                                        </div>
+        
+                                        <div class="layui-form-item amount">
+                                            <label class="layui-form-label">委托金额</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="amount" tabindex="3" maxlength="12" lay-verify="amount4Future" autocomplete="off" class="layui-input" value="0">
+                                            </div>
+                                        </div>
+
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">开平标志</label>
+                                            <div class="layui-input-block" id="future-offsetFlag">
+                                            </div>
+                                        </div>
+
+                                        <div class="layui-form-item is-hidden">
+                                            <label class="layui-form-label">投机套保标志</label>
+                                            <div class="layui-input-block" id="future-hedgeFlag">
+                                            </div>
+                                        </div>
+
+                                        <div class="layui-form-item">
+                                            
+                                            <div class="layui-input-block">
+                                                <button type="button"
+                                                    tabindex="50"
+                                                    lay-filter="reset-future-form" 
+                                                    class="layui-btn layui-btn-danger layui-btn-sm">重置参数</button>
+                                                <button lay-submit type="submit" tabindex="100" lay-filter="submit-future-form" class="layui-btn layui-btn-normal layui-btn-sm">下单</button>
+                                            </div>                                            
+                                        </div>
+                                        
+                                    </form>
+
+                                </div>
+        
+                            </div>
+
+                            <!-- 期权交易，交易画面 -->
+                
+                            <div id="tab-content-option" class="layui-tab-item">
+
+                                <!-- level2行情面板，占位符 -->
+        
+                                <!-- 期权交易，下单参数 -->
+        
+                                <div class="ordering-param-panel">
+        
+                                    <form class="form-option layui-form" lay-filter="form-option" action="">
+                                        
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">组合名称</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="portfolioName" maxlength="15" lay-verify="required" autocomplete="off" class="layui-input layui-disabled" readonly>
+                                            </div>
+                                        </div>
+        
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">资金账号</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="accountName" maxlength="15" lay-verify="required" autocomplete="off" class="layui-input layui-disabled" readonly>
+                                            </div>
+                                        </div>
+        
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">资产名称</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="stockCodeName" maxlength="15" lay-verify="required" autocomplete="off" class="layui-input layui-disabled" readonly>
+                                            </div>
+                                        </div>
+        
+                                        <div class="layui-form-item direction">
+                                            <label class="layui-form-label">委托方向</label>
+                                            <div class="layui-input-block">
+                                                <select name="direction" lay-verify="required"></select>
+                                            </div>
+                                        </div>
+        
+                                        <div class="layui-form-item price-mode">
+                                            <label class="layui-form-label">价格类型</label>
+                                            <div class="layui-input-block">
+                                                <select name="priceMode" lay-verify="required"></select>
+                                            </div>
+                                        </div>
+        
+                                        <div class="layui-form-item price">
+                                            <label class="layui-form-label">委托价格</label>
+                                            <div class="layui-input-block">
+                                                <div class="number-ctr">
+                                                    <button type="button" class="decrease-button">-</button>
+                                                    <input type="text" name="price" tabindex="1" maxlength="10" lay-verify="price4Option" autocomplete="off" class="layui-input">
+                                                    <button type="button" class="increase-button">+</button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="layui-form-item volume">
+                                            <label class="layui-form-label">委托数量</label>
+                                            <div class="layui-input-block">
+                                                <div class="number-ctr">
+                                                    <button type="button" class="decrease-button">-</button>
+                                                    <input type="text" name="volume" tabindex="2" maxlength="10" lay-verify="volume4Option" autocomplete="off" class="layui-input" value="0">
+                                                    <button type="button" class="increase-button">+</button>
+                                                </div>
+                                            </div>
+                                        </div>
+        
+                                        <div class="layui-form-item amount">
+                                            <label class="layui-form-label">委托金额</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="amount" tabindex="3" maxlength="12" lay-verify="amount4Option" autocomplete="off" class="layui-input" value="0">
+                                            </div>
+                                        </div>
+        
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label label-t-quote">
+                                                <a lay-filter="btn-open-quote" tabindex="100" class="btn-open-quote layui-btn layui-btn-danger layui-btn-sm">T型报价</a>
+                                            </label>
+                                            <div class="layui-input-block">
+                                                <button type="submit" 
+                                                    tabindex="99"
+                                                    lay-filter="submit-option-form" 
+                                                    class="layui-btn layui-btn-normal layui-btn-sm layui-btn-fluid"
+                                                    lay-submit>下单</button>
+                                            </div>
+                                            
+                                        </div>
+        
+                                    </form>
+                                </div>
+        
+                            </div>
+
+                            <!-- 批量交易，交易画面 -->
+                
+                            <div id="tab-content-batch" class="layui-tab-item">
+        
+                                <!-- 批量交易，下单参数 -->
+        
+                                <div class="ordering-param-panel">
+        
+                                    <form class="form-batch layui-form" lay-filter="form-batch" action="">
+                                        
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">组合名称</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="portfolioName" maxlength="15" lay-verify="required" autocomplete="off" class="layui-input layui-disabled" readonly>
+                                            </div>
+                                        </div>
+        
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">资金账号</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="accountName" maxlength="15" lay-verify="required" autocomplete="off" class="layui-input layui-disabled" readonly>
+                                            </div>
+                                        </div>
+        
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">资产名称</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="stockCodeName" maxlength="15" lay-verify="required" autocomplete="off" class="layui-input layui-disabled" readonly>
+                                            </div>
+                                        </div>
+        
+                                        <div class="layui-form-item direction">
+                                            <label class="layui-form-label">委托方向</label>
+                                            <div class="layui-input-block">
+                                                <select name="direction" lay-verify="required"></select>
+                                            </div>
+                                        </div>
+        
+                                        <div class="layui-form-item price-mode">
+                                            <label class="layui-form-label">价格类型</label>
+                                            <div class="layui-input-block">
+                                                <select name="priceMode" lay-verify="required"></select>
+                                            </div>
+                                        </div>
+        
+                                        <div class="layui-form-item start-price">
+                                            <label class="layui-form-label">起始价格</label>
+                                            <div class="layui-input-block">
+                                                <div class="number-ctr">
+                                                    <button type="button" class="decrease-button">-</button>
+                                                    <input type="text" name="startPrice" tabindex="1" maxlength="8" lay-verify="startPrice4Batch" autocomplete="off" class="layui-input">
+                                                    <button type="button" class="increase-button">+</button>
+                                                </div>
+                                            </div>
+                                        </div>
+        
+                                        <div class="layui-form-item price-offset">
+                                            <label class="layui-form-label">价格偏移</label>
+                                            <div class="layui-input-block">
+                                                <div class="number-ctr">
+                                                    <button type="button" class="decrease-button">-</button>
+                                                    <input type="text" name="priceOffset" tabindex="2" maxlength="8" lay-verify="priceOffset4Batch" autocomplete="off" class="layui-input">
+                                                    <button type="button" class="increase-button">+</button>
+                                                </div>
+                                            </div>
+                                        </div>
+        
+                                        <div class="layui-form-item start-volume">
+                                            <label class="layui-form-label">起始数量</label>
+                                            <div class="layui-input-block">
+                                                <div class="number-ctr">
+                                                    <button type="button" class="decrease-button">-</button>
+                                                    <input type="text" name="startVolume" tabindex="3" maxlength="10" lay-verify="startVolume4Batch" autocomplete="off" class="layui-input" value="0">
+                                                    <button type="button" class="increase-button">+</button>
+                                                </div>
+                                            </div>
+                                        </div>
+        
+                                        <div class="layui-form-item volume-offset">
+                                            <label class="layui-form-label">数量偏移</label>
+                                            <div class="layui-input-block">
+                                                <div class="number-ctr">
+                                                    <button type="button" class="decrease-button">-</button>
+                                                    <input type="text" name="volumeOffset" tabindex="4" maxlength="10" lay-verify="volumeOffset4Batch" autocomplete="off" class="layui-input" value="0">
+                                                    <button type="button" class="increase-button">+</button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="layui-form-item times">
+                                            <label class="layui-form-label">委托笔数</label>
+                                            <div class="layui-input-block">
+                                                <div class="number-ctr">
+                                                    <button type="button" class="decrease-button">-</button>
+                                                    <input type="text" name="times" tabindex="5" maxlength="5" lay-verify="times4Batch" autocomplete="off" class="layui-input">
+                                                    <button type="button" class="increase-button">+</button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="layui-form-item shortcut-setting times-shortcut">
+                                            <label class="layui-form-label"></label>
+                                            <div class="layui-input-block">
+                                                <span class="shortcuts"></span>
+                                            </div>
+                                        </div>
+        
+                                        <div class="layui-form-item sleeping-time">
+                                            <label class="layui-form-label">委托间隔</label>
+                                            <div class="layui-input-block">
+                                                <div class="number-ctr">
+                                                    <button type="button" class="decrease-button">-</button>
+                                                    <input type="text" name="sleepingTime" tabindex="6" maxlength="8" placeholder="每笔委托，间隔秒数" lay-verify="sleepingTime4Batch" autocomplete="off" class="layui-input">
+                                                    <button type="button" class="increase-button">+</button>
+                                                </div>
+                                            </div>
+                                        </div>
+        
+                                        <div class="layui-form-item total-volume">
+                                            <label class="layui-form-label">可用数量</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="totalVolume" maxlength="10" lay-verify="required" autocomplete="off" class="layui-input layui-disabled" value="0" readonly>
+                                            </div>
+                                        </div>
+        
+                                        <div class="layui-form-item total-amount">
+                                            <label class="layui-form-label">可用金额</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="totalAmount" maxlength="12" lay-verify="required" autocomplete="off" class="layui-input layui-disabled" value="0" readonly>
+                                            </div>
+                                        </div>
+        
+                                        <div class="layui-form-item order-volume">
+                                            <label class="layui-form-label">试算下单量</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="orderVolume" maxlength="10" lay-verify="orderVolume4Batch" autocomplete="off" class="layui-input layui-disabled" value="0" readonly>
+                                            </div>
+                                        </div>
+        
+                                        <div class="layui-form-item order-amount">
+                                            <label class="layui-form-label">试算下单额</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="orderAmount" maxlength="12" lay-verify="orderAmount4Batch" autocomplete="off" class="layui-input layui-disabled" value="0" readonly>
+                                            </div>
+                                        </div>
+
+                                        <div class="layui-form-item batch-offsetFlag">
+                                            <label class="layui-form-label">开平标志</label>
+                                            <div class="layui-input-block" id="batch-offsetFlag">
+                                            </div>
+                                        </div>
+
+                                        <div class="layui-form-item batch-hedgeFlag">
+                                            <label class="layui-form-label">投机套保标志</label>
+                                            <div class="layui-input-block" id="batch-hedgeFlag">
+                                            </div>
+                                        </div>
+        
+                                        <div class="layui-form-item">
+                                            <div class="layui-input-block">
+                                                <button type="button"
+                                                    tabindex="100"
+                                                    lay-filter="reset-form-batch" 
+                                                    class="layui-btn layui-btn-danger layui-btn-sm layui-btn-fluid">
+                                                    重置参数</button>
+                                                <button type="submit" 
+                                                    tabindex="99"
+                                                    lay-filter="submit-batch-form" 
+                                                    class="layui-btn layui-btn-normal layui-btn-sm layui-btn-fluid"
+                                                    lay-submit>下单</button>
+                                            </div>
+                                        </div>
+        
+                                    </form>
+                                </div>
+        
+                            </div>
+        
+                            <!-- 公平交易，交易画面 -->
+                
+                            <div id="tab-content-equal" class="layui-tab-item">
+        
+                                <div id="table-equal">
+        
+                                    <table>
+                                        <tbody>
+                                            <tr>
+                                                <td label="组合名称" prop="portfolioName" min-width="140" sortable overflowt></td>
+                                                <td label="资金账号" prop="accountName" min-width="100" sortable overflowt></td>
+                                                <td label="委托方向" prop="direction" min-width="90" formatter="formatInstrucDirection" sortable overflowt></td>
+                                                <td label="委托数量" prop="orderVolume" min-width="90" align="right" thousands-int sortable summarizable overflowt></td>
+                                                <td label="委托价格" prop="orderPrice" min-width="80" align="right" precision="3" sortable overflowt></td>
+                                                <td label="委托金额" prop="orderAmount" min-width="110" align="right" thousands sortable summarizable overflowt></td>
+                                                <td label="分配比例" prop="orderRatio" min-width="80" align="right" percentage by100 sortable overflowt></td>
+                                                <td label="组合代码" prop="portfolioId" min-width="110" sortable overflowt></td>
+                                                <td label="指令编号" prop="instructId" min-width="170" sortable overflowt></td>
+                                                <td label="资产代码" prop="stockCode" min-width="100" sortable overflowt></td>
+                                                <td label="资产名称" prop="stockName" min-width="120" sortable overflowt></td>
+                                                <td label="价格模式" prop="priceMode" min-width="80" formatter="formatPriceMode" sortable overflowt></td>
+                                                <td label="指令价格" prop="price" min-width="80" align="right" precision="3" sortable overflowt></td>
+                                                <td label="指令总数量" prop="totalVolume" min-width="90" align="right" thousands-int sortable summarizable overflowt></td>
+                                                <td label="指令剩余数量" prop="leftVolume" min-width="110" align="right" thousands-int sortable summarizable overflowt></td>
+                                                <td label="指令总金额" prop="totalAmount" min-width="120" align="right" thousands sortable summarizable overflowt></td>
+                                                <td label="指令剩余金额" prop="leftAmount" min-width="120" align="right" thousands sortable summarizable overflowt></td>
+                                                <!-- <td label="当前可用数量" prop="allowedVolume" min-width="110" align="right" thousands-int sortable summarizable overflowt></td> -->
+                                                <!-- <td label="可用占比" prop="allowedRatio" min-width="80" align="right" percentage by100 sortable overflowt></td> -->
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    
+                                </div>
+                
+                                <!-- level2行情面板，占位符 -->
+                                
+                                <!-- 公平交易，下单参数 -->
+        
+                                <div class="ordering-param-panel">
+        
+                                    <form class="form-equal layui-form" lay-filter="form-equal" action="" onkeydown="if(event.keyCode==13){return false}">
+                                        
+                                        <div class="layui-form-item">
+                                            <label class="layui-form-label">资产名称</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="stockName" lay-verify="required" autocomplete="off" class="layui-input layui-disabled" readonly>
+                                            </div>
+                                        </div>
+        
+                                        <div class="layui-form-item direction">
+                                            <label class="layui-form-label">委托方向</label>
+                                            <div class="layui-input-block">
+                                                <select name="direction" lay-verify="required"></select>
+                                            </div>
+                                        </div>
+
+                                        <div class="layui-form-item repo-rate">
+                                            <label class="layui-form-label">回购利率</label>
+                                            <div class="layui-input-block">
+                                                <div class="number-ctr">
+                                                    <button type="button" class="decrease-button">-</button>
+                                                    <input type="text" name="price" tabindex="1" maxlength="10" lay-verify="repoRate4Equal" autocomplete="off" class="layui-input">
+                                                    <button type="button" class="increase-button">+</button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="layui-form-item price-mode">
+                                            <label class="layui-form-label">价格类型</label>
+                                            <div class="layui-input-block">
+                                                <select name="priceMode" lay-verify="required"></select>
+                                            </div>
+                                        </div>
+
+                                        <div class="layui-form-item price">
+                                            <label class="layui-form-label">委托价格</label>
+                                            <div class="layui-input-block">
+                                                <div class="number-ctr">
+                                                    <button type="button" class="decrease-button">-</button>
+                                                    <input type="text" name="price" tabindex="1" maxlength="10" lay-verify="price4Equal" autocomplete="off" class="layui-input">
+                                                    <button type="button" class="increase-button">+</button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="layui-form-item full-price">
+                                            <label class="layui-form-label">全价价格</label>
+                                            <div class="layui-input-block">
+                                                <div class="number-ctr">
+                                                    <button type="button" class="decrease-button">-</button>
+                                                    <input type="text" name="fullPrice" tabindex="2" maxlength="10" lay-verify="fullPrice4Equal" autocomplete="off" class="layui-input">
+                                                    <button type="button" class="increase-button">+</button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="layui-form-item yield-rate">
+                                            <label class="layui-form-label">到期收益率</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="yieldRate" tabindex="3" maxlength="10" lay-verify="yieldRate4Equal" autocomplete="off" class="layui-input">
+                                            </div>
+                                        </div>
+        
+                                        <div class="layui-form-item volume">
+                                            <label class="layui-form-label">委托数量</label>
+                                            <div class="layui-input-block">
+                                                <div class="number-ctr">
+                                                    <button type="button" class="decrease-button">-</button>
+                                                    <input type="text" name="volume" tabindex="4" maxlength="10" lay-verify="volume4Equal" autocomplete="off" class="layui-input" value="0">
+                                                    <button type="button" class="increase-button">+</button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="layui-form-item real-volume">
+                                            <label class="layui-form-label">试算数量</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="realVolume" maxlength="10" autocomplete="off" class="layui-input" value="0">
+                                            </div>
+                                        </div>
+        
+                                        <div class="layui-form-item amount">
+                                            <label class="layui-form-label">委托金额</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="amount" tabindex="5" maxlength="12" lay-verify="amount4Equal" autocomplete="off" class="layui-input input-amount" value="0">
+                                            </div>
+                                        </div>
+
+                                        <div class="layui-form-item real-amount">
+                                            <label class="layui-form-label">试算金额</label>
+                                            <div class="layui-input-block">
+                                                <input type="text" name="realAmount" maxlength="12" autocomplete="off" class="layui-input" value="0">
+                                            </div>
+                                        </div>
+
+                                        <div class="layui-form-item offsetFlag is-hidden">
+                                            <label class="layui-form-label">开平标志</label>
+                                            <div class="layui-input-block" id="equal-offsetFlag">
+                                            </div>
+                                        </div>
+
+                                        <div class="layui-form-item hedgeFlag is-hidden">
+                                            <label class="layui-form-label">投机套保标志</label>
+                                            <div class="layui-input-block" id="equal-hedgeFlag">
+                                            </div>
+                                        </div>
+        
+                                        <div class="layui-form-item">
+                                            <div class="layui-input-block">
+                                                <button type="button"
+                                                    tabindex="100"
+                                                    lay-filter="reset-form-equal" 
+                                                    class="layui-btn layui-btn-danger layui-btn-sm layui-btn-fluid">
+                                                    重置参数</button>
+                                                <button type="submit" 
+                                                    tabindex="99"
+                                                    lay-filter="submit-equal-form" 
+                                                    class="layui-btn layui-btn-normal layui-btn-sm layui-btn-fluid"
+                                                    lay-submit>下单</button>
+                                            </div>
+                                        </div>
+        
+                                    </form>
+                                </div>
+        
+                            </div>
+
+                            <!-- 算法交易，交易画面 -->
+                
+                            <div id="tab-content-algorithm" class="layui-tab-item">
+        
+                                <form class="form-algorithm layui-form" lay-filter="form-algorithm" action="">
+                                        
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">组合名称</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" name="portfolioName" maxlength="15" lay-verify="required" autocomplete="off" class="layui-input layui-disabled" readonly>
+                                        </div>
+                                    </div>
+    
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">资金账号</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" name="accountName" maxlength="15" lay-verify="required" autocomplete="off" class="layui-input layui-disabled" readonly>
+                                        </div>
+                                    </div>
+    
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">资产名称</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" name="stockCodeName" maxlength="15" lay-verify="required" autocomplete="off" class="layui-input layui-disabled" readonly>
+                                        </div>
+                                    </div>
+    
+                                    <div class="layui-form-item direction">
+                                        <label class="layui-form-label">委托方向</label>
+                                        <div class="layui-input-block">
+                                            <select name="direction" lay-verify="required"></select>
+                                        </div>
+                                    </div>
+    
+                                    <div class="layui-form-item algo-type">
+                                        <label class="layui-form-label">算法类型</label>
+                                        <div class="layui-input-block">
+                                            <select name="algoType" lay-verify="required"></select>
+                                        </div>
+                                    </div>
+    
+                                    <div class="layui-form-item volume">
+                                        <label class="layui-form-label">委托数量</label>
+                                        <div class="layui-input-block">
+                                            <div class="number-ctr">
+                                                <button type="button" class="decrease-button">-</button>
+                                                <input type="text" name="volume" tabindex="1" maxlength="10" lay-verify="volume4Algorithm" autocomplete="off" class="layui-input" value="0">
+                                                <button type="button" class="increase-button">+</button>
+                                            </div>
+                                        </div>
+                                    </div>
+    
+                                    <div class="layui-form-item amount">
+                                        <label class="layui-form-label">委托金额</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" name="amount" tabindex="2" maxlength="12" lay-verify="amount4Algorithm" autocomplete="off" class="layui-input" value="0">
+                                        </div>
+                                    </div>
+
+                                    <div class="layui-form-item start-time">
+                                        <label class="layui-form-label">开始时间</label>
+                                        <div class="layui-input-block">
+                                            <div class="layui-inline">
+                                                <input type="text" name="startTime" lay-verify="startTime4Algorithm" autocomplete="off" class="layui-input" readonly>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="layui-form-item end-time">
+                                        <label class="layui-form-label">结束时间</label>
+                                        <div class="layui-input-block">
+                                            <div class="layui-inline">
+                                                <input type="text" name="endTime" lay-verify="endTime4Algorithm" autocomplete="off" class="layui-input" readonly>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="layui-form-item radio-option">
+                                        <label class="layui-form-label">选项1</label>
+                                        <div class="layui-input-block">
+                                            <input type="radio" name="isEndTimeOverRunnable" value="true" title="交易超时后，仍然继续未完交易">
+                                            <input type="radio" name="isEndTimeOverRunnable" value="false" title="终止" checked>
+                                        </div>
+                                    </div>
+
+                                    <div class="layui-form-item radio-option">
+                                        <label class="layui-form-label">选项2</label>
+                                        <div class="layui-input-block">
+                                            <input type="radio" name="isExtremePriceAcceptable" value="true" title="标的涨跌停，仍然继续未完交易">
+                                            <input type="radio" name="isExtremePriceAcceptable" value="false" title="终止" checked>
+                                        </div>
+                                    </div>
+    
+                                    <div class="layui-form-item">
+                                        <div class="layui-input-block">
+
+                                            <button type="button"
+                                                tabindex="100"
+                                                lay-filter="reset-form-algorithm"
+                                                class="layui-btn layui-btn-danger layui-btn-sm layui-btn-fluid">重置参数</button>
+
+                                            <button type="submit" 
+                                                tabindex="99"
+                                                lay-filter="submit-algorithm-form" 
+                                                class="layui-btn layui-btn-normal layui-btn-sm layui-btn-fluid"
+                                                lay-submit>下单</button>
+                                        </div>
+                                    </div>
+    
+                                </form>
+        
+                            </div>
+        
+                            <!-- 申购认购交易，交易画面 -->
+                
+                            <div id="tab-content-apply" class="layui-tab-item">
+                
+                                <form class="form-apply layui-form form-1line-2ctrs" lay-filter="form-apply" action="">
+                                        
+                                    <div class="layui-form-item">
+        
+                                        <div class="layui-inline">
+                                            <label class="layui-form-label">组合名称</label>
+                                            <div class="layui-input-inline">
+                                                <input type="text" name="portfolioName" maxlength="15" lay-verify="required" autocomplete="off" class="layui-input layui-disabled" readonly>
+                                            </div>                                    
+                                        </div>
+        
+                                        <div class="layui-inline">
+                                            <label class="layui-form-label">资金账号</label>
+                                            <div class="layui-input-inline">
+                                                <input type="text" name="accountName" maxlength="15" lay-verify="required" autocomplete="off" class="layui-input layui-disabled" readonly>
+                                            </div>
+                                        </div>
+        
+                                    </div>
+        
+                                    <div class="layui-form-item">
+                                        
+                                        <div class="layui-inline">
+                                            <label class="layui-form-label">资产名称</label>
+                                            <div class="layui-input-inline">
+                                                <input type="text" name="stockCodeName" maxlength="15" lay-verify="required" autocomplete="off" class="layui-input layui-disabled" readonly>
+                                            </div>
+                                        </div>
+        
+                                        <div class="layui-inline direction">
+                                            <label class="layui-form-label">委托方向</label>
+                                            <div class="layui-input-inline">
+                                                <select name="direction" lay-verify="required"></select>
+                                            </div>
+                                        </div>
+        
+                                    </div>
+        
+                                    <div class="layui-form-item">
+        
+                                        <div class="layui-inline price">
+                                            <label class="layui-form-label">委托价格</label>
+                                            <div class="layui-input-inline">
+                                                <input type="text" name="price" maxlength="10" lay-verify="price4Apply" autocomplete="off" class="layui-input layui-disabled" readonly>
+                                            </div>
+                                        </div>
+        
+                                        <div class="layui-inline volume">
+                                            <label class="layui-form-label">委托数量</label>
+                                            <div class="layui-input-inline">
+                                                <input type="text" name="volume" maxlength="10" lay-verify="volume4Apply" autocomplete="off" class="layui-input layui-disabled" readonly>
+                                            </div>
+                                        </div>
+        
+                                    </div>
+        
+                                    <div class="layui-form-item">
+                                        
+                                        <div class="layui-inline conNum">
+                                            <label class="layui-form-label">可转股数量</label>
+                                            <div class="layui-input-inline">
+                                                <input type="text" name="conNum" maxlength="10" autocomplete="off" class="layui-input layui-disabled" readonly>
+                                            </div>
+                                        </div>
+
+                                        <div class="layui-inline amount">
+                                            <label class="layui-form-label">委托金额</label>
+                                            <div class="layui-input-inline">
+                                                <input type="text" name="amount" maxlength="12" lay-verify="amount4Apply" autocomplete="off" class="layui-input layui-disabled" readonly>
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+        
+                                    <div class="layui-form-item item-btn">
+
+                                        <button type="submit" 
+                                        lay-filter="submit-apply-form" 
+                                        class="layui-btn layui-btn-normal layui-btn-sm layui-btn-fluid"
+                                        lay-submit>下单</button>
+
+                                    </div>
+        
+                                </form>
+        
+                            </div>
+                    
+                            <!-- 大宗交易，交易画面 -->
+            
+                            <div id="tab-content-scale" class="layui-tab-item">
+                
+                                <!-- 大宗交易行情列表 -->
+        
+                                <div class="scale-quote-box">
+                                  
+                                    <span class="user-toolkit" id="user-toolkit-3">
+                                        <span class="refresh-time"></span>
+                                        <a class="layui-icon layui-icon-refresh-3" title="刷新盘后行情"></a>
+                                    </span>
+        
+                                    <div id="table-scale-quote-1">
+                                        <table>
+                                            <tbody>
+                                                <tr>
+                                                    <!-- <td label="申报序号" prop="orderNo" min-width="90" sortable overflowt></td> -->
+                                                    <td label="资产代码" prop="stockCode" min-width="90" fixed sortable overflowt></td>
+                                                    <td label="资产名称" prop="stockName" min-width="90" fixed sortable overflowt></td>
+                                                    <td label="行情类型" prop="reportType" min-width="140" formatter="formatScaleReportType" sortable overflowt></td>
+                                                    <td label="方向" prop="direction" min-width="70" formatter="formatHsDirection" sortable overflowt></td>
+                                                    <td label="数量" prop="entrustVolume" min-width="80" align="right" thousands-int sortable overflowt></td>
+                                                    <td label="价格" prop="entrustPrice" min-width="80" align="right" precision="3" sortable overflowt></td>
+                                                    <td label="对方席位" prop="propSeatNo" min-width="80" align="right" overflowt></td>
+                                                    <td label="约定号" prop="contractId" min-width="110" sortable overflowt></td>
+                                                    <td label="联系人" prop="liaisonName" min-width="80" sortable overflowt></td>
+                                                    <td label="联系方式" prop="liaisonTel" min-width="110" sortable overflowt></td>
+                                                    <!-- <td label="申报时间" prop="reportTime" min-width="140" formatter="formatDateTime" sortable overflowt></td> -->
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+        
+                                    <div id="table-scale-quote-2" class="is-hidden">
+                                        <table>
+                                            <tbody>
+                                                <tr>
+                                                    <td label="资产代码" prop="stockCode" min-width="90" sortable overflowt></td>
+                                                    <td label="资产名称" prop="stockName" min-width="90" sortable overflowt></td>
+                                                    <td label="收盘价" prop="closePrice" min-width="80" align="right" precision="3" sortable overflowt></td>
+                                                    <td label="日均价" prop="avgPrice" min-width="80" align="right" formatter="formatDayAvgPrice" sortable overflowt></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <ul class="scale-quote-tab">
+                                        <li class="layui-this">交易行情</li>
+                                        <li>盘后行情</li>
+                                    </ul>
+        
+        
+                                </div>
+                
+                                <!-- 下单参数 -->
+                
+                                <form class="form-scale layui-form form-1line-2ctrs" lay-filter="form-scale" action="">
+                
+                                    <div class="layui-form-item">
+                
+                                        <div class="layui-inline">
+                                            <label class="layui-form-label">组合名称</label>
+                                            <div class="layui-input-inline">
+                                                <input type="text" name="portfolioName" maxlength="15" lay-verify="required" class="layui-input layui-disabled" readonly>
+                                            </div>
+                                        </div>
+                
+                                        <div class="layui-inline">
+                                            <label class="layui-form-label">资金账号</label>
+                                            <div class="layui-input-inline">
+                                                <input type="text" name="accountName" maxlength="15" lay-verify="required" class="layui-input layui-disabled" readonly>
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                
+                                    <div class="layui-form-item">
+                
+                                        <div class="layui-inline">
+                                            <label class="layui-form-label">资产名称</label>
+                                            <div class="layui-input-inline">
+                                                <input type="text" name="stockCodeName" maxlength="15" lay-verify="required" autocomplete="off" class="layui-input layui-disabled" readonly>
+                                            </div>
+                                        </div>
+        
+                                        <div class="layui-inline direction">
+                                            <label class="layui-form-label">委托方向</label>
+                                            <div class="layui-input-inline">
+                                                <select name="direction" lay-verify="required"></select>
+                                            </div>
+                                        </div>
+                
+                                    </div>
+                
+                                    <div class="layui-form-item control-package">
+                
+                                        <div class="layui-inline report-type">
+                                            <label class="layui-form-label">申报类型</label>
+                                            <select name="reportType" lay-verify="reportType4Scale"></select>
+                                        </div>
+        
+                                        <div class="layui-inline price">
+                                            <label class="layui-form-label">委托价格</label>
+                                            <div class="layui-input-inline">
+                                                <div class="number-ctr">
+                                                    <button type="button" class="decrease-button">-</button>
+                                                    <input type="text" name="price" tabindex="1" maxlength="10" lay-verify="price4Scale" autocomplete="off" class="layui-input">
+                                                    <button type="button" class="increase-button">+</button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="layui-inline full-price">
+                                            <label class="layui-form-label">全价价格</label>
+                                            <div class="layui-input-inline">
+                                                <div class="number-ctr">
+                                                    <button type="button" class="decrease-button">-</button>
+                                                    <input type="text" name="fullPrice" tabindex="2" maxlength="10" lay-verify="fullPrice4Scale" autocomplete="off" class="layui-input">
+                                                    <button type="button" class="increase-button">+</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="layui-inline yield-rate">
+                                            <label class="layui-form-label">到期收益率</label>
+                                            <div class="layui-input-inline">
+                                                <input type="text" name="yieldRate" tabindex="3" maxlength="10" lay-verify="yieldRate4Scale" autocomplete="off" class="layui-input">
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="layui-inline volume">
+                                            <label class="layui-form-label">委托数量</label>
+                                            <div class="layui-input-inline">
+                                                <div class="number-ctr">
+                                                    <button type="button" class="decrease-button">-</button>
+                                                    <input type="text" name="volume" tabindex="4" maxlength="10" lay-verify="volume4Scale" autocomplete="off" class="layui-input" value="0">
+                                                    <button type="button" class="increase-button">+</button>
+                                                </div>
+                                            </div>
+                                        </div>
+        
+                                        <div class="layui-inline amount">
+                                            <label class="layui-form-label">委托金额</label>
+                                            <div class="layui-input-inline">
+                                                <input type="text" name="amount" tabindex="5" maxlength="12" lay-verify="amount4Scale" autocomplete="off" class="layui-input">
+                                            </div>
+                                        </div> 
+                                        
+                                        <div class="layui-inline contact">
+                                            <label class="layui-form-label">联系人</label>
+                                            <div class="layui-input-inline">
+                                                <input type="text" name="contact" tabindex="6" maxlength="8" lay-verify="contact4Scale" autocomplete="off" class="layui-input">
+                                            </div>
+                                        </div>
+        
+                                        <div class="layui-inline contact-tel">
+                                            <label class="layui-form-label">联系方式</label>
+                                            <div class="layui-input-inline">
+                                                <input type="text" name="contactTel" tabindex="7" maxlength="11" lay-verify="contactTel4Scale" autocomplete="off" class="layui-input">
+                                            </div>
+                                        </div>
+
+                                        <div class="layui-inline counter-id">
+                                            <label class="layui-form-label">交易对手</label>
+                                            <div class="layui-input-inline">
+                                                <select name="counterId" lay-verify="counterId4Scale" lay-search></select>
+                                            </div>
+                                        </div>
+        
+                                        <div class="layui-inline seat-num">
+                                            <label class="layui-form-label">对手席位</label>
+                                            <div class="layui-input-inline">
+                                                <select type="text" name="counterSeat" tabindex="8" lay-verify="counterSeat4Scale" lay-search> </select>
+                                            </div>
+                                        </div>
+                
+                                        <div class="layui-inline contract-id">
+                                            <label class="layui-form-label">约定号</label>
+                                            <div class="layui-input-inline">
+                                                <input type="text" name="contractId" tabindex="9" maxlength="8" lay-verify="contractId4Scale" autocomplete="off" class="layui-input">
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+
+                                    <div class="layui-form-item form-tool">
+
+                                        <button type="button"
+                                                tabindex="100"
+                                                lay-filter="reset-form-scale" 
+                                                class="layui-btn layui-btn-danger layui-btn-sm layui-btn-fluid">重置参数</button>
+
+                                        <button type="button"
+                                                tabindex="99"
+                                                lay-filter="submit-scale-form" 
+                                                class="layui-btn layui-btn-normal layui-btn-sm layui-btn-fluid"
+                                                lay-submit>下单</button>
+                                    
+                                    </div>
+                
+                                </form>
+        
+                            </div>
+        
+                            <!-- 协议回购，交易画面 -->
+                
+                            <div id="tab-content-repo" class="layui-tab-item">
+                                <div id="repoTable" class="is-hidden">
+                                    <table>
+                                        <tbody>
+                                            <tr>
+                                                <td label="资产代码" prop="stockCode" min-width="90" fixed sortable overflowt></td>
+                                                <td label="资产名称" prop="stockName" min-width="90" fixed sortable overflowt></td>
+                                                <td label="质押数量" prop="impawnAmount" min-width="90" align="right" thousands-int sortable overflowt></td>
+                                                <td label="结算金额" prop="settleBalance" min-width="110" align="right" thousands sortable overflowt></td>
+                                                <td label="对方席位" prop="propSeatNo" min-width="80" align="right" overflowt></td>
+                                                <td label="约定号" prop="cbpconferId" min-width="80" sortable overflowt></td>
+                                                <td label="首次交易日期" prop="firstExchdate" min-width="110" sortable overflowt></td>
+                                                <td label="回购日期" prop="repurchaseDate" min-width="90" sortable overflowt></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <form class="form-repo layui-form form-1line-2ctrs" lay-filter="form-repo" action="">
+                
+                                    <div class="layui-form-item control-package">
+                                        <!-- input controls are here -->
+                                    </div>
+        
+                                    <div class="layui-form-item item-btn">
+
+                                        <button type="button"
+                                                tabindex="100"
+                                                lay-filter="reset-form-repo" 
+                                                class="layui-btn layui-btn-danger layui-btn-sm layui-btn-fluid">重置参数</button>
+
+                                        <button type="button"
+                                                tabindex="99" 
+                                                lay-filter="submit-repo-form" 
+                                                class="layui-btn layui-btn-normal layui-btn-sm layui-btn-fluid"
+                                                lay-submit >下单</button>
+                                    </div>
+                
+                                </form>
+        
+                            </div>
+        
+                            <!-- 质押出入库，交易画面 -->
+                
+                            <div id="tab-content-pledge" class="layui-tab-item">
+                
+                                <form class="form-pledge layui-form form-1line-2ctrs" lay-filter="form-pledge" action="">
+                
+                                    <div class="layui-form-item">
+                
+                                        <div class="layui-inline">
+                                            <label class="layui-form-label">组合名称</label>
+                                            <div class="layui-input-inline">
+                                                <input type="text" name="portfolioName" maxlength="15" lay-verify="required" class="layui-input layui-disabled" readonly>
+                                            </div>
+                                        </div>
+                
+
+                                        <div class="layui-inline">
+                                            <label class="layui-form-label">资金账号</label>
+                                            <div class="layui-input-inline">
+                                                <input type="text" name="accountName" maxlength="15" lay-verify="required" class="layui-input layui-disabled" readonly>
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+        
+                                    <div class="layui-form-item">
+                
+                                        <div class="layui-inline">
+                                            <label class="layui-form-label">资产名称</label>
+                                            <div class="layui-input-inline">
+                                                <input type="text" name="stockCodeName" maxlength="15" lay-verify="required" autocomplete="off" class="layui-input layui-disabled" readonly>
+                                            </div>
+                                        </div>
+                
+                                        <div class="layui-inline direction">
+                                            <label class="layui-form-label">委托方向</label>
+                                            <div class="layui-input-inline">
+                                                <select name="direction" lay-verify="required"></select>
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+        
+                                    <div class="layui-form-item">
+                
+                                        <div class="layui-inline volume">
+                                            <label class="layui-form-label">委托数量</label>
+                                            <div class="layui-input-inline">
+                                                <input type="text" name="volume" maxlength="10" lay-verify="volumePledge" autocomplete="off" class="layui-input">
+                                            </div>
+                                        </div>
+                
+                                        <div class="layui-inline ratio">
+                                            <label class="layui-form-label">折算率</label>
+                                            <div class="layui-input-inline">
+                                                <input type="text" name="ratio" maxlength="10" lay-verify="required" autocomplete="off" class="layui-input">
+                                            </div>
+                                        </div>
+                                    </div>   
+                                    
+                                    <div class="layui-form-item">
+                
+                                        <div class="layui-inline standardBondVolume">
+                                            <label class="layui-form-label">标准券数量</label>
+                                            <div class="layui-input-inline">
+                                                <input type="text" name="standardBondVolume" maxlength="10" autocomplete="off" class="layui-input">
+                                            </div>
+                                        </div>
+                                    </div> 
+        
+                                    <div class="layui-form-item item-btn">
+
+                                        <button type="submit" 
+                                        lay-filter="submit-pledge-form" 
+                                        tabindex="99"
+                                        class="layui-btn layui-btn-normal layui-btn-sm layui-btn-fluid"
+                                        lay-submit>下单</button>
+                                    </div>
+                                </form>
+                            </div>
+        
+                            <!-- 固定收益，交易画面 -->
+                
+                            <div id="tab-content-constr" class="layui-tab-item">
+                
+                                <!-- 固定收益协议报单列表 -->
+                
+                                <div id="table-constr-quote">
+        
+                                    <table>
+                                        <tbody>
+                                            <tr>
+                                                <td label="订单编号" prop="orderNo" min-width="90" fixed sortable overflowt></td>
+                                                <td label="资产代码" prop="stockCode" min-width="90" fixed sortable overflowt></td>
+                                                <td label="资产名称" prop="stockName" min-width="90" fixed sortable overflowt></td>
+                                                <td label="方向" prop="direction" min-width="70" formatter="formatHsDirection" sortable overflowt></td>
+                                                <td label="数量" prop="volume" min-width="80" align="right" thousands-int sortable overflowt></td>
+                                                <td label="净价" prop="netPrice" min-width="80" align="right" precision="3" overflowt></td>
+                                                <td label="全价" prop="fullPrice" min-width="80" align="right" precision="3" overflowt></td>
+                                                <td label="收益率" prop="yieldRate" min-width="90" align="right" precision="3" percentage by100 sortable overflowt></td>
+                                                <td label="申报时间" prop="reportTime" min-width="140" formatter="formatDateTime" sortable overflowt></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                    
+                                </div>
+                
+                                <!-- 下单参数 -->
+                
+                                <form class="form-constr layui-form form-1line-2ctrs" lay-filter="form-constr" action="">
+                
+                                    <div class="layui-form-item">
+                
+                                        <div class="layui-inline">
+                                            <label class="layui-form-label">组合名称</label>
+                                            <div class="layui-input-inline">
+                                                <input type="text" name="portfolioName" maxlength="15" lay-verify="required" class="layui-input layui-disabled" readonly>
+                                            </div>
+                                        </div>
+                
+                                        <div class="layui-inline">
+                                            <label class="layui-form-label">资金账号</label>
+                                            <div class="layui-input-inline">
+                                                <input type="text" name="accountName" maxlength="15" lay-verify="required" class="layui-input layui-disabled" readonly>
+                                            </div>
+                                        </div>
+                                        
+                                    </div>
+                
+                                    <div class="layui-form-item">
+                
+                                        <div class="layui-inline">
+                                            <label class="layui-form-label">资产名称</label>
+                                            <div class="layui-input-inline">
+                                                <input type="text" name="stockCodeName" maxlength="15" lay-verify="required" autocomplete="off" class="layui-input layui-disabled" readonly>
+                                            </div>
+                                        </div>
+        
+                                        <div class="layui-inline direction">
+                                            <label class="layui-form-label">委托方向</label>
+                                            <div class="layui-input-inline">
+                                                <select name="direction" lay-verify="required"></select>
+                                            </div>
+                                        </div>
+                
+                                    </div>
+        
+                                    <div class="layui-form-item control-package">
+        
+                                        <div class="layui-inline report-type">
+                                            <label class="layui-form-label">申报类型</label>
+                                            <div class="layui-input-inline">
+                                                <select name="reportType" lay-verify="required"></select>
+                                            </div>
+                                        </div>
+        
+                                        <div class="layui-inline settle-speed">
+                                            <label class="layui-form-label">清算速度</label>
+                                            <div class="layui-input-inline">
+                                                <select name="settleSpeed" lay-verify="required"></select>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="layui-inline net-price">
+                                            <label class="layui-form-label">净价价格</label>
+                                            <div class="layui-input-inline">
+                                                <div class="number-ctr">
+                                                    <button type="button" class="decrease-button">-</button>
+                                                    <input type="text" name="netPrice" tabindex="1" maxlength="10" lay-verify="netPrice4Constr" autocomplete="off" class="layui-input">
+                                                    <button type="button" class="increase-button">+</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="layui-inline full-price">
+                                            <label class="layui-form-label">全价价格</label>
+                                            <div class="layui-input-inline">
+                                                <div class="number-ctr">
+                                                    <button type="button" class="decrease-button">-</button>
+                                                    <input type="text" name="fullPrice" tabindex="2" maxlength="10" lay-verify="fullPrice4Constr" autocomplete="off" class="layui-input">
+                                                    <button type="button" class="increase-button">+</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="layui-inline yield-rate">
+                                            <label class="layui-form-label">到期收益率</label>
+                                            <div class="layui-input-inline">
+                                                <input type="text" name="yieldRate" tabindex="3" maxlength="10" lay-verify="yieldRate4Constr" autocomplete="off" class="layui-input">
+                                            </div>
+                                        </div>
+                                    
+                                        <div class="layui-inline volume">
+                                            <label class="layui-form-label">委托数量</label>
+                                            <div class="layui-input-inline">
+                                                <div class="number-ctr">
+                                                    <button type="button" class="decrease-button">-</button>
+                                                    <input type="text" name="volume" tabindex="4" maxlength="10" lay-verify="volume4Constr" autocomplete="off" class="layui-input">
+                                                    <button type="button" class="increase-button">+</button>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="layui-inline ice-volume">
+                                            <label class="layui-form-label">冰山订单数</label>
+                                            <div class="layui-input-inline">
+                                                <div class="number-ctr">
+                                                    <button type="button" class="decrease-button">-</button>
+                                                    <input type="text" name="iceVolume" maxlength="10" lay-verify="iceVolume4Constr" autocomplete="off" class="layui-input">
+                                                    <button type="button" class="increase-button">+</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="layui-inline amount">
+                                            <label class="layui-form-label">净价金额</label>
+                                            <div class="layui-input-inline">
+                                                <input type="text" name="amount" maxlength="12" lay-verify="amount4Constr" autocomplete="off" class="layui-input">
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="layui-inline contact">
+                                            <label class="layui-form-label">本方交易员</label>
+                                            <div class="layui-input-inline">
+                                                <input type="text" name="contact" tabindex="5" maxlength="8" lay-verify="contact4Constr" autocomplete="off" class="layui-input">
+                                            </div>
+                                        </div>
+
+                                        <div class="layui-inline counter-id">
+                                            <label class="layui-form-label">交易对手</label>
+                                            <div class="layui-input-inline">
+                                                <select name="counterId" tabindex="8" lay-search></select>
+                                            </div>
+                                        </div>
+
+                                        <div class="layui-inline counterTrader">
+                                            <label class="layui-form-label">对手交易员</label>
+                                            <div class="layui-input-inline">
+                                                <select name="counterTrader" tabindex="7" lay-verify="counter4Constr"  lay-search></select>
+                                            </div>
+                                        </div>
+        
+                                        <div class="layui-inline counter-broker">
+                                            <label class="layui-form-label">对手交易商</label>
+                                            <div class="layui-input-inline">
+                                                <input type="text" name="counterBroker" tabindex="6" maxlength="8" lay-verify="counterBroker4Constr" class="layui-input">
+                                            </div>
+                                        </div>
+
+                                        <div class="layui-inline contract-id">
+                                            <label class="layui-form-label">约定号</label>
+                                            <div class="layui-input-inline">
+                                                <input type="text" name="contractId" tabindex="9" maxlength="8" lay-verify="contractId4Constr" autocomplete="off" class="layui-input">
+                                            </div>
+                                        </div>
+                                    </div>
+                
+                                    <div class="layui-form-item item-btn">
+        
+                                        <button type="button"
+                                                tabindex="100"
+                                                lay-filter="reset-form-constr" 
+                                                class="layui-btn layui-btn-danger layui-btn-sm layui-btn-fluid">重置参数</button>
+        
+                                        <button type="button"
+                                                tabindex="99"
+                                                lay-filter="submit-constr-form" 
+                                                class="layui-btn layui-btn-normal layui-btn-sm layui-btn-fluid"
+                                                lay-submit>下单</button>
+                                    </div>
+                
+                                </form>
+        
+                            </div>
+
+                             <!-- 篮子交易，交易画面 -->
+                
+                            <div id="tab-content-basket" class="layui-tab-item">
+        
+                                <form class="form-basket layui-form" lay-filter="form-basket" action="">
+
+                                    <!-- 篮子交易，篮子项列表 -->
+
+                                    <div id="table-basket-quote" class="table-basket-quote">
+        
+                                        <table>
+                                            <tbody>
+                                                <tr>
+                                                    <td label="代码" prop="stockCode" min-width="110" sortable overflowt></td>
+                                                    <td label="名称" prop="stockName" min-width="110" sortable overflowt></td>
+                                                    <td label="数量" prop="volume" min-width="90" align="right" thousands sortable overflowt></td>
+                                                    <td label="剩余数量" prop="leftVolume" min-width="110" align="right"  thousands sortable overflowt></td>
+                                                    <td label="金额" prop="amount" min-width="90" align="right"  thousands sortable overflowt></td>
+                                                    <td label="剩余金额" prop="leftAmount" min-width="110" align="right" thousands sortable overflowt></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        
+                                    </div>  
+
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">组合名称</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" name="portfolioName" maxlength="15" lay-verify="required" autocomplete="off" class="layui-input layui-disabled" readonly>
+                                        </div>
+                                    </div>
+    
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">资金账号</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" name="accountName" maxlength="15" lay-verify="required" autocomplete="off" class="layui-input layui-disabled" readonly>
+                                        </div>
+                                    </div>
+    
+                                    <div class="layui-form-item">
+                                        <label class="layui-form-label">资产名称</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" name="stockCodeName" maxlength="15" lay-verify="required" autocomplete="off" class="layui-input layui-disabled" readonly>
+                                        </div>
+                                    </div>
+    
+                                    <div class="layui-form-item direction">
+                                        <label class="layui-form-label">委托方向</label>
+                                        <div class="layui-input-block">
+                                            <select name="direction" lay-verify="required"></select>
+                                        </div>
+                                    </div>
+    
+                                    <div class="layui-form-item algo-type">
+                                        <label class="layui-form-label">算法类型</label>
+                                        <div class="layui-input-block">
+                                            <select name="algoType" lay-verify="required"></select>
+                                        </div>
+                                    </div>
+
+                                    <div class="layui-form-item start-time">
+                                        <label class="layui-form-label">开始时间</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" name="startTime" lay-verify="startTime4Algorithm" autocomplete="off" class="layui-input" readonly>
+                                        </div>
+                                    </div>
+
+                                    <div class="layui-form-item end-time">
+                                        <label class="layui-form-label">结束时间</label>
+                                        <div class="layui-input-block">
+                                            <input type="text" name="endTime" lay-verify="endTime4Algorithm" autocomplete="off" class="layui-input" readonly>
+                                        </div>
+                                    </div>
+
+                                    <div class="layui-form-item radio-option">
+                                        <label class="layui-form-label">选项1</label>
+                                        <div class="layui-input-block">
+                                            <input type="radio" name="isEndTimeOverRunnable" value="true" title="交易超时后，仍然继续未完交易">
+                                            <input type="radio" name="isEndTimeOverRunnable" value="false" title="终止" checked>
+                                        </div>
+                                    </div>
+
+                                    <div class="layui-form-item radio-option">
+                                        <label class="layui-form-label">选项2</label>
+                                        <div class="layui-input-block">
+                                            <input type="radio" name="isExtremePriceAcceptable" value="true" title="标的涨跌停，仍然继续未完交易">
+                                            <input type="radio" name="isExtremePriceAcceptable" value="false" title="终止" checked>
+                                        </div>
+                                    </div>
+                                  
+                                    <div class="layui-form-item">
+                                        <div class="layui-input-block">
+
+                                            <button type="button"
+                                            tabindex="100"
+                                            lay-filter="reset-form-basket" 
+                                            class="layui-btn layui-btn-danger layui-btn-sm layui-btn-fluid">重置参数</button>
+
+                                            <button type="submit" id="submit-basket-form"
+                                                tabindex="99"
+                                                lay-filter="submit-basket-form" 
+                                                class="layui-btn layui-btn-normal layui-btn-sm layui-btn-fluid"
+                                                lay-submit>下单</button>
+                                        </div>
+                                    </div>
+    
+                                </form>
+        
+                            </div>
+        
+                        </div>
+        
+                    </div>
+
+                    <!-- 订单委托列表关联的权限控制按钮 -->
+                    <div class="table-data-tools-relate">
+                        <button id="btn-order-cancel"></button>
+                        <button id="btn-entrust-cancel"></button>
+                    </div>
+        
+                    <!-- 右侧列表展示区域 -->
+            
+                    <div id="bottom-right-panel" class="bottom-right-panel">
+                        
+                        <!-- 订单（竞价 | 基金转换 | 大宗 | 债转股 | 回售，共享） -->
+            
+                        <div class="data-list-panel">
+        
+                            <div class="layui-tab layui-tab-card" lay-filter="data-list-tab">
+            
+                                <ul class="layui-tab-title">
+                                    <li id="tab-order" class="layui-this">订单</li>
+                                    <li id="tab-entrust">委托</li>
+                                    <li id="tab-exchange">成交</li>
+                                </ul>
+
+                                <span class="user-toolkit" id="user-toolkit-2">
+                                    <span class="refresh-time"></span>
+                                    <a class="layui-icon layui-icon-refresh-3" title="刷新"></a>
+                                </span>
+                                
+                                <div class="layui-tab-content">
+            
+                                    <div class="layui-tab-item layui-show">
+        
+                                        <form class="form-query form-query-orders layui-form" lay-filter="form-query-orders" action="" onkeydown="if(event.keyCode==13){return false}">
+                                            <div class="layui-form-item">
+                                                <!-- <div class="layui-inline">
+                                                    <input type="radio" name="radio-orders" lay-filter="radio-orders" value="1" title="全部" checked>
+                                                    <input type="radio" name="radio-orders" lay-filter="radio-orders" value="2" title="可撤" >
+                                                </div> -->
+                                                <div class="layui-inline">
+                                                    <input type="text" name="keyWords" id="keywords-orders" class="layui-input" placeholder="关键字搜索">
+                                                </div>
+                                            </div>
+                                        </form>
+        
+                                        <div id="multi-type-orders"></div>
+        
+                                    </div>
+        
+                                    <div class="layui-tab-item">
+        
+                                        <form class="form-query form-query-entrusts layui-form" lay-filter="form-query-entrusts" action="" onkeydown="if(event.keyCode==13){return false}">
+                                            <div class="layui-form-item">
+                                                <div class="layui-inline">
+                                                    <input type="radio" name="radio-entrusts" lay-filter="radio-entrusts" value="1" title="全部" checked>
+                                                    <input type="radio" name="radio-entrusts" lay-filter="radio-entrusts" value="2" title="可撤" >
+                                                </div>
+                                                <div class="layui-inline">
+                                                    <input type="text" name="keyWords" id="keywords-entrusts" class="layui-input" placeholder="关键字搜索">
+                                                </div>
+                                            </div>
+                                        </form>
+        
+                                        <div id="multi-type-entrusts"></div>
+        
+                                    </div>
+            
+                                    <div class="layui-tab-item">
+        
+                                        <form class="form-query form-query-exchanges layui-form" lay-filter="form-query-exchanges" action="" onkeydown="if(event.keyCode==13){return false}">
+                                            <div class="layui-form-item">
+                                                <div class="layui-inline">
+                                                    <input type="text" name="keyWords" id="keywords-exchanges" class="layui-input" placeholder="关键字搜索">
+                                                </div> 
+                                            </div>
+                                        </form>
+        
+                                        <div id="multi-type-exchanges"></div>
+        
+                                    </div>
+            
+                                </div>
+                            </div>
+                        </div> 
+                    </div>
+            
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <div id="template-root" class="template-root">
+
+        <!-- level2 行情展示 -->
+
+        <div class="level2-panel">
+                            
+            <h3>-----</h3>
+    
+            <div class="price-bulletin">
+
+                <div class="latest-price">
+                    <a class="price-anchor">0.00</a>
+                </div>
+
+                <div class="change-direction">
+                    <span class="icon-up s-color-red">↑</span>
+                    <span class="icon-down s-color-green">↓</span>
+                </div>
+
+                <div class="change-info">
+                    <div class="change">0.00</div>
+                    <div class="percentage">0.00%</div>
+                </div>
+            </div>
+
+            <div class="price-boundary">
+                <div class="typical-price item-open">今开<a class="price-anchor">0.00</a></div>
+                <div class="typical-price item-preclose">昨收<a class="price-anchor">0.00</a></div>
+                <div class="typical-price item-ceiling">涨停<a class="price-anchor s-color-red">0.00</a></div>
+                <div class="typical-price item-floor">跌停<a class="price-anchor s-color-green">0.00</a></div>
+            </div>
+
+            <!-- 卖出档位 -->
+
+            <div class="level level-sell">
+
+                <div class="level-item">
+                    <label class="level-name">卖五</label>
+                    <a class="level-price price-anchor">0.00</a>
+                    <label class="level-volume">0</label>
+                </div>
+
+                <div class="level-item">
+                    <label class="level-name">卖四</label>
+                    <a class="level-price price-anchor">0.00</a>
+                    <label class="level-volume">0</label>
+                </div>
+
+                <div class="level-item">
+                    <label class="level-name">卖三</label>
+                    <a class="level-price price-anchor">0.00</a>
+                    <label class="level-volume">0</label>
+                </div>
+
+                <div class="level-item">
+                    <label class="level-name">卖二</label>
+                    <a class="level-price price-anchor">0.00</a>
+                    <label class="level-volume">0</label>
+                </div>
+
+                <div class="level-item">
+                    <label class="level-name">卖一</label>
+                    <a class="level-price price-anchor">0.00</a>
+                    <label class="level-volume">0</label>
+                </div>
+
+            </div>
+
+            <!-- 买入档位 -->
+
+            <div class="level level-buy">
+
+                <div class="level-item">
+                    <label class="level-name">买一</label>
+                    <a class="level-price price-anchor">0.00</a>
+                    <label class="level-volume">0</label>
+                </div>
+
+                <div class="level-item">
+                    <label class="level-name">买二</label>
+                    <a class="level-price price-anchor">0.00</a>
+                    <label class="level-volume">0</label>
+                </div>
+
+                <div class="level-item">
+                    <label class="level-name">买三</label>
+                    <a class="level-price price-anchor">0.00</a>
+                    <label class="level-volume">0</label>
+                </div>
+
+                <div class="level-item">
+                    <label class="level-name">买四</label>
+                    <a class="level-price price-anchor">0.00</a>
+                    <label class="level-volume">0</label>
+                </div>
+
+                <div class="level-item">
+                    <label class="level-name">买五</label>
+                    <a class="level-price price-anchor">0.00</a>
+                    <label class="level-volume">0</label>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- 期权合约T型报价 -->
+
+    <div class="tquote-panel is-hidden">
+        <table>
+            <tbody>
+                <tr>
+                    <td label="合约代码" min-width="130" prop="long-stockName" fixed sortable overflowt></td>
+                    <td label="内在价值" min-width="80" prop="long-innerValue" precision="4" class-maker="makeInnerValueCellClass" align="right" sortable overflowt></td>
+                    <td label="时间价值" min-width="80" prop="long-timeValue" precision="4" class-maker="makeTimeValueCellClass" align="right" sortable overflowt></td>
+                    <td label="成交量" min-width="70" prop="long-tradeVolume" thousands-int align="right" sortable overflowt></td>
+                    <td label="涨跌幅" min-width="70" prop="long-percentage" class-maker="makePosNegCellClass" percentage by100 align="right" sortable overflowt></td>
+                    <td label="卖量" min-width="50" prop="long-sellVolume" thousands-int align="right" sortable overflowt></td>
+                    <td label="卖价" min-width="70" prop="long-sellPrice" precision="4" class-maker="makePosNegCellClass" align="right" sortable overflowt></td>
+                    <td label="买量" min-width="50" prop="long-buyVolume" thousands-int align="right" sortable overflowt></td>
+                    <td label="买价" min-width="70" prop="long-buyPrice" precision="4" class-maker="makePosNegCellClass" align="right" sortable overflowt></td>
+                    <td label="最新价" min-width="70" prop="long-latestPrice" precision="4" class-maker="makePosNegCellClass" align="right" sortable overflowt></td>
+
+                    <td label="行权价" min-width="70" prop="trimedStrikePrice" class-maker="makeStrikePriceCellClass" align="right" sortable overflowt></td>
+
+                    <td label="最新价" min-width="70" prop="short-latestPrice" precision="4" class-maker="makePosNegCellClass2" align="right" sortable overflowt></td>
+                    <td label="买价" min-width="70" prop="short-buyPrice" precision="4" class-maker="makePosNegCellClass2" align="right" sortable overflowt></td>
+                    <td label="买量" min-width="50" prop="short-buyVolume" thousands-int align="right" sortable overflowt></td>
+                    <td label="卖价" min-width="70" prop="short-sellPrice" precision="4" class-maker="makePosNegCellClass2" align="right" sortable overflowt></td>
+                    <td label="卖量" min-width="50" prop="short-sellVolume" thousands-int align="right" sortable overflowt></td>
+                    <td label="涨跌幅" min-width="70" prop="short-percentage" class-maker="makePosNegCellClass2" align="right" percentage by100 sortable overflowt></td>
+                    <td label="成交量" min-width="70" prop="short-tradeVolume" thousands-int align="right" sortable overflowt></td>
+                    <td label="时间价值" min-width="80" prop="short-timeValue" precision="4" class-maker="makeTimeValueCellClass" align="right" sortable overflowt ></td>
+                    <td label="内在价值" min-width="80" prop="short-innerValue" precision="4" class-maker="makeInnerValueCellClass" align="right" sortable overflowt ></td>
+                    <td label="合约代码" min-width="130" prop="short-stockName" fixed="right" align="right" sortable overflowt></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- <script data-th-src="@{/valjixu/js/public/js/jquery-1.9.1.min.js}" type="text/javascript"></script>
+    <script data-th-src="@{/public/layui/layui.all.js}" type="text/javascript" charset="utf-8"></script> -->
+
+    <script src="../static/layui/layui.all.js" charset="utf-8"></script>
+    <script src="../static/3rd/axios.min.js" charset="utf-8"></script>
+    <script src="../static/3rd/split.min.js"></script>
+    <script src="../static/type-extension.js"></script>
+
+    <!-- <script data-th-src="@{/valjixu/js/public/js/bignumber.min.js}" type="text/javascript"></script>
+    <script type="text/javascript" data-th-src="@{/valjixu/js/public/js/plugins/joyin-util.js}"></script>
+    <script type="text/javascript" data-th-src="@{/valjixu/js/public/js/plugins/joyin-plugins-all.js}"></script>
+    <script data-th-src="@{/valjixu/js/public/layui/lay/modules/tableSelect.js}" type="text/javascript"></script>
+    <script data-th-src="@{/valjixu/js/public/layui/lay/modules/checkbox.js}" type="text/javascript"></script>
+    <script  data-th-src="@{/valjixu/js/jixu/framework/da_inf.js}" type="text/javascript"></script>
+    <script data-th-src="@{/js/workflow/workflow.js}" type="text/javascript"></script> -->
+
+    <script src="../static/pages/trading-requisite.js" type="text/javascript"></script>
+    
+</body>
+</html>

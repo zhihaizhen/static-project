@@ -1,0 +1,40 @@
+{
+  "name": "joyinweb",
+  "version": "0.0.1",
+  "description": "joyin trading app",
+  "main": "main.js",
+  "scripts": {
+    "dev": "webpack-dev-server --open",
+    "build": "webpack -p"
+  },
+  "repository": {
+    "type": "git",
+    "url": "ssh://git@gitlab.uxmc.cn:10022/wangbing/joyin-app.git"
+  },
+  "author": "Steven",
+  "devDependencies": {
+    "@babel/core": "^7.7.7",
+    "@babel/plugin-proposal-function-bind": "^7.7.4",
+    "@babel/plugin-transform-runtime": "^7.7.6",
+    "@babel/preset-env": "^7.7.7",
+    "@babel/preset-stage-0": "^7.0.0",
+    "@babel/runtime": "^7.7.7",
+    "babel-loader": "^8.0.6",
+    "copy-webpack-plugin": "^5.1.1",
+    "css-loader": "^3.4.0",
+    "extract-text-webpack-plugin": "^3.0.2",
+    "html-webpack-plugin": "^3.2.0",
+    "node-sass": "^4.13.0",
+    "sass-loader": "^8.0.0",
+    "scss-loader": "0.0.1",
+    "style-loader": "^1.1.2",
+    "webpack": "^4.41.5",
+    "webpack-cli": "^3.3.10",
+    "webpack-dev-server": "^3.10.1"
+  },
+  "dependencies": {
+    "babel-polyfill": "^6.26.0",
+    "echarts": "^4.9.0",
+    "querystring": "^0.2.0"
+  }
+}

@@ -1,0 +1,1186 @@
+/*
+    style content
+*/
+$form-label-percent: 80px;
+$form-input-inline-percent: calc(100% - 90px) !important;
+$form-input-block-percent: calc(100% - 80px) !important;
+$form-select-percent: 100% !important;
+$form-inline: 50%;
+
+body {
+
+    margin: 0;
+    padding: 0;
+    font-size: 12px;
+    overflow: auto;
+}
+
+.content-body {
+    width: 100%;
+    overflow: auto;
+}
+
+.content-root {
+    position: relative;
+    height: 880px;
+    padding: 10px;
+}
+
+.content-root2 {
+    position: relative;
+    height: 500px;
+    padding: 10px;
+}
+
+.tool-panel{
+    position: relative;
+    height: 32px;
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: space-between;
+    line-height: 32px;
+    background-color: #f2f2f2;
+    padding: 0 10px 0 10px;
+    border: 1px solid #ddd;
+}
+
+.top-panel {
+    border: 1px solid #ddd;
+}
+
+.detail-panel {
+
+    position: relative;
+    margin-top: 5px;
+    padding: 0;
+    max-height: 30px;
+    min-height: 30px;
+    overflow: hidden;
+    border: 1px solid #ddd;
+    border-radius: 2px;
+
+    .expander {
+
+        position: absolute;
+        top: 5px;
+        right: 20px;
+        .layui-icon {
+            font-size: 20px;
+        }
+    }
+
+    .detail-guideline {
+
+        line-height: 20px;
+        padding: 5px;
+        text-align: center;
+        font-weight: bold;
+        
+        &.error {
+
+            border-left: 5px solid red;
+            color: red;
+        }
+    }
+
+    .detail-panel-inner {
+
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: row;
+        margin-top: -5px;
+
+        .detail-item {
+        
+            display: flex;
+            width: 250px;
+            flex-direction: row;
+            line-height: 30px;
+    
+            .item-lable {
+
+                width: 150px;
+                padding: 0;
+                font-size: 12px;
+                font-weight: bold;
+                color: #606060;
+                text-align: right;
+                margin-right: 10px;
+            }
+    
+            .item-value {
+                
+                width: 100px;
+                font-size: 12px;
+                color: #333333;
+                overflow: hidden;
+                text-overflow:ellipsis;
+                white-space: nowrap;
+            }
+
+        }
+
+        .divide-line {
+
+            height: 100%;
+            width: 1px;
+            background-image: linear-gradient(white, gray, white);
+        }
+    
+    }
+    
+    &.expanded {
+        max-height: unset;
+    }
+}
+
+.slides-panel {
+
+    display: flex;
+    margin-top: 10px;
+    box-sizing: border-box;
+
+    .layui-input {
+        &.layui-disabled {
+            background-color: #eee;
+        }
+    }
+
+    .bottom-left-panel {
+
+        box-sizing: border-box;
+        width: 650px;
+        margin-right: 3px;
+
+        .level2-panel {
+
+            position: absolute;
+            width: 200px;
+
+            h3 {
+
+                font-weight: bold;
+                line-height: 26px;
+                text-align: left;
+                position: relative;
+            }
+
+            .price-bulletin {
+
+                height: 40px;
+                border-bottom: 1px solid #E6E6E6;
+
+                > * {
+                    display: block;
+                    line-height: 40px;
+                }
+
+                .latest-price,
+                .change-direction {
+
+                    float: left;
+                    padding-left: 5px;
+                    font-size: 18px;
+
+                    .icon-up,
+                    .icon-down {
+                        display: none;
+                    }
+                }
+
+                .change-direction {
+
+                    .icon-down {
+                        display: none;
+                    }
+                }
+
+                .change-info {
+
+                    float: right;
+                    padding-right: 10px;
+
+                    .change {
+
+                        position: relative;
+                        top: 3px;
+                        line-height: 14px;
+                    }
+
+                    .percentage {
+
+                        position: relative;
+                        top: 7px;
+                        line-height: 14px;
+                    }
+                }
+            }
+
+            .price-boundary {
+
+                height: 45px;
+                padding: 5px 0;
+                border-bottom: 1px solid #E6E6E6;
+
+                .typical-price {
+
+                    a {
+                        padding-left: 5px;
+                    }
+
+                    float: left;
+                    width: 50%;
+                    height: 22px;
+                    line-height: 22px;
+                }
+            }
+
+            .level {
+
+                .level-item {
+
+                    line-height: 20px;
+
+                    > * {
+                        display: inline-block;
+                    }
+
+                    .level-name {
+                        width: 20%;
+                    }
+
+                    .level-price {
+                        
+                        width: 40%;
+                        text-align: center;
+                    }
+
+                    .level-volume {
+
+                        width: 30%;
+                        padding-right: 10px;
+                        text-align: right;
+                    }
+                }
+
+                &.level-sell {
+                    border-bottom: 1px solid #E6E6E6;
+                }
+            }
+
+            .price-anchor {
+
+                cursor: pointer;
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
+        }
+
+        .layui-form-select {
+            display: inline-block;
+        }
+
+        .ordering-param-panel {
+            
+            padding-left: 200px;
+
+            .layui-form {
+
+                height: 100%;
+                border-left: 1px solid #E6E6E6;
+            }
+        }
+
+        .layui-badge-rim {
+
+            box-sizing: border-box;
+            height: 26px;
+            line-height: 26px;
+            font-size: 14px;
+        }
+
+        .number-ctr {
+
+            button {
+
+                border: none;
+                text-align: center;
+                cursor: pointer;
+                font-size: 22px;
+                color: #999;
+            }
+
+            button:hover {
+                color: #666;
+            }
+
+            .decrease-button {
+
+                position: absolute;
+                margin-top: 2px;
+                margin-left: 2px;
+                height: 24px;
+                width: 24px;
+                border-radius: 2px 0 0 2px;
+                border-right: 1px solid #E6E6E6;
+            }
+
+            .decrease-button:hover {
+                border-right: 1px solid #D2D2D2;
+            }
+
+            input:not(:first-child) {
+
+                padding-left: 32px;
+                padding-right: 32px;
+            }
+
+            .increase-button {
+                
+                float: right;
+                margin-top: -26px;
+                margin-right: 2px;
+                height: 24px;
+                width: 24px;
+                border-radius: 0 2px 2px 0;
+                border-left: 1px solid #E6E6E6;
+            }
+
+            .unit-label {
+
+                position: absolute;
+                right: 8px;
+                top: 6px;
+            }
+
+            &.with-incr-desc {
+                .unit-label {
+                    right: 30px;
+                }
+            }
+        }
+
+        .diabled-number-ctr {
+
+            .decrease-button,
+            .increase-button {
+                cursor: not-allowed;
+            }
+        }
+
+        .form-1line-2ctrs {
+
+            border: 1px solid #e6e6e6;
+            border-radius: 3px;
+            padding: 10px 5px;
+
+            .layui-form-item {
+
+                .layui-inline .layui-input-inline,
+                .layui-inline .layui-form-select {
+
+                    width: 185px;
+                }
+
+                .layui-input-inline {
+                    margin-right: 0;
+                }
+            }
+        }
+
+        .form-apply,
+        .form-pledge {
+
+            .item-btn {
+
+                display: flex;
+                justify-content: center;
+                button {
+                    width: 100%;
+                    margin: 0 30px 0 30px;
+                }
+            }
+           
+        
+            .layui-form-label {
+                width: $form-label-percent;
+            }
+        
+            .layui-input-inline{
+                width: $form-input-inline-percent;
+            }
+
+            .layui-form-select {
+                width: $form-select-percent;
+            }
+        
+            .layui-inline {
+                margin-bottom: 5px; 
+                width: $form-inline;
+            }
+        }
+
+    }
+
+    .bottom-right-panel {
+
+        box-sizing: border-box;
+        min-height: 350px;
+        margin-left: 3px;
+
+        .data-list-panel {
+
+            .layui-tab-content {
+                height: 510px;
+            }
+
+            .joyin-table-body {
+                min-height: 50px;
+            }
+            
+            .layui-tab-title li{
+                min-width: 45px !important;
+            }
+            
+        }
+       
+    }
+}
+
+.form-normal,
+.form-algorithm,
+.form-basket,
+.form-option {
+
+    .layui-form-label {
+        width: $form-label-percent;
+    }
+
+    .layui-input-block {
+        width: $form-input-block-percent;
+    }
+
+    .layui-form-select {
+        width: $form-select-percent;
+    }
+
+}
+
+.form-normal,
+.form-batch,
+.form-equal,
+.form-algorithm {
+
+    Button{
+        width: 90px;
+    }
+}
+
+.form-basket{
+    .table-basket-quote{
+        margin-bottom: 10px;
+    }
+    Button{
+        width: 190px;
+    }
+}
+
+.form-algorithm {
+
+    .layui-inline {
+        display: block;
+        position: initial;
+    }
+}
+
+.form-option {
+
+    .label-t-quote {
+
+        position: relative;
+        top: -5px;
+
+        &::after {
+            content: '';
+        }
+
+        button {
+
+            padding: 0;
+            width: 60px;
+        }
+    }
+}
+
+.tquote-panel {
+    
+    .cell-strike-price {
+        background-color: yellow;
+    }
+}
+
+.form-equal {
+
+    margin-top: 10px;
+
+    .ordering-param-panel {
+        height: 330px;
+    }
+
+    .layui-form-label {
+        width: $form-label-percent;
+    }
+
+    .layui-input-block {
+        width: $form-input-block-percent;
+    }
+
+    .layui-form-select {
+        width: $form-select-percent;
+    }
+}
+
+.form-batch {
+
+    .layui-form-label {
+        width: $form-label-percent;
+    }
+
+    .layui-input-block {
+        width: $form-input-block-percent;
+    }
+
+    .layui-form-select {
+        width: $form-select-percent;
+    }
+}
+
+.form-scale {
+
+    margin-top: 5px;
+    .form-tool{
+        display: flex;
+        justify-content: center;
+        button {
+            width: $form-input-inline-percent;
+        }
+    }
+    
+
+    .layui-form-label {
+        width: $form-label-percent;
+    }
+
+    .layui-input-inline{
+        width: $form-input-inline-percent;
+    }
+
+    .layui-form-select {
+        width: $form-select-percent;
+    }
+
+    .report-type {
+        .layui-form-select {
+            width: $form-input-inline-percent;
+        }
+    }
+
+    .layui-inline {
+        margin-bottom: 5px; 
+        width: $form-inline;
+    }
+}
+
+.form-future {
+
+    .layui-form-select {
+        width: $form-select-percent;
+    }
+}
+
+.scale-quote-box {
+
+    margin-top: -5px;
+        
+    .scale-quote-tab {
+
+        position: relative;
+        left: 0;
+        height: 32px;
+        background-color: #f2f2f2;
+        white-space: nowrap;
+        font-size: 0;
+        border-color: #e6e6e6;
+        border-bottom-width: 1px;
+        border-bottom-style: solid;
+
+        li {
+
+            display: inline-block;
+            position: relative;
+            margin-right: -1px;
+            margin-left: -1px;
+            padding: 0 15px;
+            border: 1px solid #e6e6e6;
+            min-width: 65px;
+            text-align: center;
+            vertical-align: middle;
+            line-height: 30px;
+            font-size: 12px;
+            cursor: pointer;
+
+            &.layui-this {
+
+                background-color: #fff;
+	            color: #000;
+            }
+        }
+    }
+
+    #table-scale-quote-1,#table-scale-quote-2 {
+        height: 160px;
+    }
+}
+
+.layui-progress-big .layui-progress-text {
+    color: #666;
+}
+
+#repoTable{
+    height: 160px;
+}
+
+.form-repo {
+
+    .layui-form-label {
+        width: 90px;
+    }
+
+    .layui-input-inline {
+        width: $form-input-inline-percent;
+    }
+
+    .layui-form-select {
+        width: $form-select-percent;
+    }
+
+    .layui-inline {
+        margin-bottom: 5px;
+        width: $form-inline;
+    }
+    .item-btn{
+        display: flex;
+        justify-content: center;
+        margin: 10px 30px 0 30px;
+        Button{
+            width: 100%;
+        }
+    }
+    .table-external {
+
+        box-sizing: border-box;
+        height: 130px;
+        padding-left: 10px;
+        padding-right: 20px;
+    }
+    .newInformation {
+       
+        position: relative;
+
+        button {
+            border: none;
+            text-align: center;
+            cursor: pointer;
+            font-size: 22px;
+            color: #999;
+        }
+        .addInformation-button {
+            float: right;
+            margin-top: -26px;
+            margin-right: 2px;
+            height: 24px;
+            width: 24px;
+            border-radius: 0 2px 2px 0;
+            border-left: 1px solid #E6E6E6;
+            position: absolute;top: 28px;right: -1px;
+        }
+    }
+}
+
+#table-constr-quote{
+    height: 160px;
+}
+
+.form-constr {
+
+    margin-top: 5px;
+    .item-btn{
+        display: flex;
+        justify-content: center;
+        button {
+            width: $form-input-inline-percent;
+        }
+    }
+    
+    
+    .layui-form-label {
+        width: $form-label-percent;
+    }
+
+    .layui-input-inline {
+        width: $form-input-inline-percent;
+    }
+
+    .layui-form-select {
+        width: $form-select-percent;
+    }
+
+    .layui-inline {
+        margin-bottom: 5px;
+        width: $form-inline;
+    }
+    
+}
+
+#tab-content-equal {
+
+    .level2-panel {
+        margin-top: 10px;
+    }
+
+    .ordering-param-panel {
+
+        border-top: 1px solid #E6E6E6;
+        margin-top: 5px;
+    }
+}
+
+.joyin-table {
+
+    .layui-unselect {
+        display: none;
+    }
+}
+
+.joyin-table-header {
+
+    input[type=checkbox] {
+
+        display: inline-block;
+        top: 0px !important;
+        left: 5px;
+    }
+}
+
+.joyin-table-body {
+
+    input[type=checkbox] {
+
+        display: inline-block;
+        top: 5px;
+    }
+
+    .layui-progress-big,
+    .layui-progress-big .layui-progress-bar {
+        
+        height: 16px;
+        line-height: 16px;
+    }
+}
+
+.template-root {
+    display: none;
+}
+
+.form-query-instruc{
+    position: relative;
+    .layui-form-select {
+        display: inline-block;
+    }
+    .layui-input{
+        width: 120px;
+        height: 25px;
+        margin-top: -3px;
+    }
+    .layui-form-switch{
+        margin-top: -3px !important;
+    }
+    Button{
+        padding: 3px 8px;
+        border-radius: 2px;
+        height: 21px;
+        line-height: 1;
+        font-size: 12px;
+        margin-left: 5px;
+        width: 80px;
+        margin-top: -3px;
+    }
+    .checkbox-instruc-style {
+        margin-top: -14px;
+    } 
+}
+.layui-tab-item{
+    position: relative;
+
+    .form-query{
+        position: absolute;
+        padding: 0px 30px 0 10px;
+        top: -38px;
+        left: 200px;
+        white-space: nowrap;
+        
+        .layui-form-radio{
+            margin: 0 0 0 0;
+            padding-right: 5px;
+        }
+        .layui-input{
+            width: 100px;
+            height: 25px;
+        }
+        button{
+            padding: 3px 6px;
+            border-radius: 2px;
+            height: 20px;
+            line-height: 1;
+            font-size: 12px;
+        }
+    }
+
+    .form-manage-query{
+        position: absolute;
+        padding: 0px 30px 0 10px;
+        top: -38px;
+        left: 370px;
+        white-space: nowrap;
+        
+        .layui-form-radio{
+            margin: 0 0 0 0;
+            padding-right: 5px;
+        }
+        .layui-input{
+            width: 100px;
+            height: 25px;
+        }
+        button{
+            padding: 3px 6px;
+            border-radius: 2px;
+            height: 20px;
+            line-height: 1;
+            font-size: 12px;
+        }
+    }
+
+    .form-terminal{
+        position: absolute;
+        padding: 0px 30px 0 10px;
+        top: -38px;
+        left: 170px;
+        white-space: nowrap;
+        
+        .layui-form-radio{
+            margin: 0 0 0 0;
+            padding-right: 5px;
+        }
+        .layui-input{
+            width: 100px;
+            height: 25px;
+        }
+        button{
+            padding: 3px 6px;
+            border-radius: 2px;
+            height: 20px;
+            line-height: 1;
+            font-size: 12px;
+        }
+    }
+}
+
+
+.user-toolkit {
+    position: relative;
+    display: block;
+    float: right;
+    margin-top: -26px;
+    margin-right: 20px;
+    a {
+        padding-left: 5px;
+        cursor: pointer;
+    }
+}
+
+.is-hidden {
+    display: none !important;
+}
+
+/*
+    standarized style
+*/
+
+.s-color-red {
+    color: red !important;
+}
+
+.s-color-green {
+    color: green !important;
+}
+
+.s-color-gray {
+    color: gray !important;
+}
+
+.s-bg-red {
+    background-color: red !important;
+}
+
+.s-bg-green {
+    background-color: green !important;
+}
+
+.s-ellipsis {
+
+    overflow: hidden;
+    word-wrap: normal;
+    white-space: nowrap !important;
+    text-overflow: ellipsis;
+}
+
+.s-cp {
+    cursor: pointer;
+}
+
+.s-underline {
+
+    &:hover {
+        text-decoration: underline !important;
+    }
+}
+
+/*
+    rewrite layui component style
+*/
+
+.layui-tab {
+    margin: 0;
+}
+
+.layui-form-item {
+
+    margin-bottom: 4px;
+    padding-top: 0;
+    white-space: nowrap;
+}
+
+.layui-form-label {
+
+    padding: 5px 0;
+    &::after {
+        content: '：';
+        padding-left: 3px;
+    }
+}
+
+.layui-input, 
+.layui-select {
+    height: 28px;
+}
+
+.layui-disabled,
+.layui-disabled:hover {
+    color: #666 !important;
+}
+
+.layui-input-block {
+
+    margin-left: 80px;
+    min-height: 28px;
+}
+
+.layui-form-radio * {
+    font-size: 12px;
+}
+
+.layui-form-radio > i {
+
+    margin-right: 6px;
+    font-size: 16px;
+}
+
+.gutter-horizontal {
+    height: 570px;
+    width: 5px !important;
+    background: #dbdbdd;
+    -webkit-box-shadow: 0 0 1px 0 rgba(28,36,56,.4);
+    box-shadow: 0 0 1px 0 rgba(28,36,56,.4);
+    cursor: ew-resize;
+}
+
+.gutter-vertical {
+    width: 100%;
+    height: 5px !important;
+    margin-top: 5px;
+    background: #dbdbdd;
+    -webkit-box-shadow: 0 0 1px 0 rgba(28,36,56,.4);
+    box-shadow: 0 0 1px 0 rgba(28,36,56,.4);
+    cursor: n-resize;
+}
+
+.shortcut-setting {
+
+    height: 20px;
+    line-height: 20px;
+
+    .layui-form-label::after {
+        content: '';
+    }
+
+    .shortcuts a {
+
+        display: inline-block;
+        margin-right: 15px;
+        cursor: pointer;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}
+
+.layui-form-radio {
+    margin-top: 0;
+}
+
+.control-package {
+
+    white-space: normal;
+    
+    > * {
+        display: block;
+        float: left;
+    }
+}
+
+.refresh-time {
+    display: none;
+}
+
+.link-button {
+
+    cursor: pointer;
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+.table-page{
+    display: flex;
+    flex-direction: row-reverse;
+    .layui-laypage{
+        margin: 5px 0 0 0 !important;
+    }
+}
+
+
+
+.switch {
+    width: 50px;
+    height: 20px;
+    position: relative;
+    border: 1px solid #dfdfdf;
+    background-color: #fdfdfd;
+    box-shadow: #dfdfdf 0 0 0 0 inset;
+    border-radius: 18px;
+    background-clip: content-box;
+    display: inline-block;
+    -webkit-appearance: none;
+    user-select: none;
+    outline: none;
+    top: 2px !important;
+}
+.switch:before {
+    content: '';
+    width: 18px;
+    height: 18px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-radius: 18px;
+    background-color: #fff;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+.switch:checked {
+    border-color: #64bd63;
+    box-shadow: #64bd63 0 0 0 16px inset;
+    background-color: #64bd63;
+}
+.switch:checked:before {
+    left: 30px;
+}
+.switch.switch-anim {
+    transition: border cubic-bezier(0, 0, 0, 1) 0.4s, box-shadow cubic-bezier(0, 0, 0, 1) 0.4s;
+}
+.switch.switch-anim:before {
+    transition: left 0.3s;
+}
+.switch.switch-anim:checked {
+    box-shadow: #64bd63 0 0 0 16px inset;
+    background-color: #64bd63;
+    transition: border ease 0.4s, box-shadow ease 0.4s, background-color ease 1.2s;
+}
+.switch.switch-anim:checked:before {
+    transition: left 0.3s;
+}
+
+.table-child-terminal{
+    width: 500px !important;
+}
+
+
+.form-create-terminal{
+    padding: 50px 20px 0px 20px;
+
+    .layui-form-select{
+        display: inline-block;
+    }
+}
+
+.mapping-terminal-dialog {
+    
+    .layui-form-select {
+        display: inline-block;
+    }
+}
+
+.table-inner-input{
+    height: 20px;
+}
+
+.table-data-tools-relate {
+    width: 0px;
+    height: 0px;
+}
+
+
+.addInformationContainer {
+       
+    position: relative;
+
+    button {
+        border: none;
+        text-align: center;
+        cursor: pointer;
+        font-size: 22px;
+        color: #999;
+    }
+    .addInformation-button {
+        float: right;
+        margin-top: -54px;
+        margin-right: 3px;
+        height: 24px;
+        width: 24px;
+        border-radius: 0 2px 2px 0;
+        border-left: 1px solid #E6E6E6;
+        position: absolute;top: 28px;right: -1px;
+    }
+}
+
