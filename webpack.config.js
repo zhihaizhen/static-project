@@ -1,6 +1,7 @@
 const webpack = require("webpack");
 const WebpackHtml = require("html-webpack-plugin");
 const WebpackCopy = require("copy-webpack-plugin");
+const Path = require('path');
 
 module.exports = {
     
@@ -11,7 +12,7 @@ module.exports = {
     },
 
     output: {
-        path: __dirname + "/dist",
+        path: Path.join(__dirname, "dist"),
         filename: "static/pages/[name].js?[hash]"
     },
 
@@ -29,6 +30,34 @@ module.exports = {
                 test: /\.scss$/,
                 use: ["style-loader", "css-loader", "sass-loader"]
             },
+            {
+                test: /\.(png|jpg|gif)$/,
+                use: [
+                  {
+                    loader: 'file-loader',
+                    options: {
+                        // name: path.join('static', 'images/[name].[ext]')
+                        name: '[name].[ext]',
+                        outputPath: '../static/images/'
+                    }
+                  }
+                ]
+            },
+
+            {
+                test: /\.(png|jpg|gif)$/,
+                use: [
+                  {
+                    loader: 'url-loader',
+                    options: {
+                        name: '[name].[ext]',
+                        outputPath: '../static/images/',
+                        limit: 400000
+                    }
+                  }
+                ]
+            }
+    
         ]
     },
 
@@ -44,13 +73,13 @@ module.exports = {
          * html templates
          */
 
-        new WebpackHtml({
+        // new WebpackHtml({
 
-            filename: "templates/trading.html",
-            template: "./templates/trading.html",
-            chunks: ["trading"],
-            hash: true
-        }),
+        //     filename: "templates/trading.html",
+        //     template: "./templates/trading.html",
+        //     chunks: ["trading"],
+        //     hash: true
+        // }),
 
         new WebpackHtml({
 
