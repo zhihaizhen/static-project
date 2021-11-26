@@ -44,19 +44,19 @@ module.exports = {
                 ]
             },
 
-            {
-                test: /\.(png|jpg|gif)$/,
-                use: [
-                  {
-                    loader: 'url-loader',
-                    options: {
-                        name: '[name].[ext]',
-                        outputPath: '../static/images/',
-                        limit: 400000
-                    }
-                  }
-                ]
-            }
+            // {
+            //     test: /\.(png|jpg|gif)$/,
+            //     use: [
+            //       {
+            //         loader: 'url-loader',
+            //         options: {
+            //             name: '[name].[ext]',
+            //             outputPath: '../static/images/',
+            //             limit: 400000
+            //         }
+            //       }
+            //     ]
+            // }
     
         ]
     },
