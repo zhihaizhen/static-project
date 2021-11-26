@@ -6,8 +6,8 @@ module.exports = {
     
     entry: {
         trading: "./static/pages/trading.js",
-        staticIndex: "./static/pages/staticIndex.js",
-        staticBt: "./static/pages/staticBt.js",
+        staticJs1: "./static/pages/staticJs1.js",
+        staticJs2: "./static/pages/staticJs2.js",
     },
 
     output: {
@@ -28,7 +28,7 @@ module.exports = {
             {
                 test: /\.scss$/,
                 use: ["style-loader", "css-loader", "sass-loader"]
-            }
+            },
         ]
     },
 
@@ -54,17 +54,17 @@ module.exports = {
 
         new WebpackHtml({
 
-            filename: "templates/staticIndex.html",
-            template: "./templates/staticIndex.html",
-            chunks: ["staticIndex"],
+            filename: "templates/staticHtml1.html",
+            template: "./templates/staticHtml1.html",
+            chunks: ["staticJs1"],
             hash: true
         }),
 
         new WebpackHtml({
 
-            filename: "templates/staticBt.html",
-            template: "./templates/staticBt.html",
-            chunks: ["staticBt"],
+            filename: "templates/staticHtml2.html",
+            template: "./templates/staticHtml2.html",
+            chunks: ["staticJs2"],
             hash: true
         }),
 
@@ -72,6 +72,8 @@ module.exports = {
 
             { from: "static/layui", to: "static/layui" },
             { from: "static/joyin", to: "static/joyin" },
+            { from: "static/images", to: "static/images" },
+            { from: "static/bootstrap", to: "static/bootstrap" },
             { from: "static/3rd/axios.min.js", to: "static/3rd/axios.min.js" },
             { from: "static/type-extension.js", to: "static/type-extension.js" },
             { from: "static/3rd/split.min.js", to: "static/3rd/split.min.js" },
