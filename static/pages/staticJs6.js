@@ -17,6 +17,12 @@ class PageController {
   }
 
   init() {
+    if (window.innerWidth <= 768) {
+      //isMobile
+      document.documentElement.style.fontSize = "2vmin";
+    } else {
+      document.documentElement.style.fontSize = "14px";
+    }
     function onResize() {
       if (window.innerWidth <= 768) {
         //isMobile

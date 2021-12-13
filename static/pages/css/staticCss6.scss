@@ -120,6 +120,9 @@ body {
     align-items: center;
     justify-content: space-between;
     padding: 1rem 0;
+    @media screen and (max-width: 768px) {  
+        height: 18rem;
+    }
     .content {
         width: 40%;
         height: 3.5rem;
@@ -127,7 +130,7 @@ body {
         align-items: center;
         @media screen and (max-width: 768px) {  
             width: 90%;
-            height: 2rem;
+            height: 4rem;
         }
         .search-view {
             display: flex;
@@ -136,7 +139,7 @@ body {
                 border: 0;
                 width: 35rem;
                 @media screen and (max-width: 768px) {  
-                    width: 12rem;
+                    width: 25rem;
                 }
             }
     
@@ -148,12 +151,14 @@ body {
             height: 2.9rem;
             font-size: 1.2rem;
             color: white;
-            text-align: center;
-            line-height: 3rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             cursor: pointer;
             @media screen and (max-width: 768px) {  
-                width: 6rem;
-                height: 2.9rem;
+                width: 15rem;
+                height: 5.7rem;
+                font-size: 2rem;
             }
         }
     }
@@ -200,6 +205,9 @@ body {
         background-color: #017ac9;
         display: block;
         float: left;
+        @media screen and (max-width: 768px) {  
+            width: 0.5rem;
+        }
     }
     h2 {
         font-size: 1rem;
@@ -287,6 +295,9 @@ body {
                 line-height: 2rem;
                 display: flex;
                 align-items: center;
+                @media screen and (max-width: 768px) {  
+                    line-height: 4rem;
+                }
                 
                 a {
                     font-size: 0.8rem;
@@ -307,6 +318,10 @@ body {
                     display: flex;
                     justify-content: center;
                     align-items: center;
+                    @media screen and (max-width: 768px) {  
+                        width: 1.5rem;
+                        height: 1.5rem;
+                    }
                     
                 }
                 &:first-child {
@@ -339,11 +354,15 @@ footer {
     text-align: center;
     color: #666666;
     padding-top: 15px;
+    @media screen and (max-width: 768px) {  
+        height: 12rem;
+    }
     .f-bottom {
         width: 100%;
         padding-top: 10px;
         line-height: 1rem;
         ul {
+            list-style: none;
             li {
                 p,a {
                     font-size: 1rem;
@@ -351,7 +370,7 @@ footer {
                     line-height: 1.4rem;
                     @media screen and (max-width: 768px) { 
                         font-size: 0.5rem;
-                        line-height: 1rem;
+                        line-height: 2rem;
                     }
                 }
             }
