@@ -1,0 +1,170 @@
+/*
+    style content
+*/
+$max768: "(max-width: 768px)";
+
+body {
+    position: relative;
+    margin: 0;
+    padding: 0;
+    font-size: 12px;
+    overflow-x: hidden;
+    background: #ffffff;
+    font-family: "PingFang SC", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", Helvetica, Arial, "Hiragino Sans GB", "Source Han Sans", "Noto Sans CJK Sc", "Microsoft YaHei", "Microsoft Jhenghei", sans-serif;
+}
+
+.hide{
+    visibility: hidden;
+}
+
+
+.site-header {
+    position: relative;
+    width: 100%;
+    font-size: 1.2rem;
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    padding: 0 20%;
+    @media screen and (max-width: 768px) { 
+        padding: 2rem 10%;
+        margin-top: 3rem;
+        margin-bottom: 1rem;
+    }
+    .header-menu{
+        width: 100%;
+        display: flex;
+        justify-content: space-around;
+        flex-wrap: wrap;
+        margin-top: 1rem;
+        .logo-view {
+            position: relative;
+            display: flex;
+            align-items: center;
+            img {
+                width: 20rem;
+                margin-right: 5rem;
+                @media screen and (max-width: 768px) {
+                    width: 10rem;
+                    margin-right: 1rem;
+                }
+            }
+
+            span {
+                font-size: 1rem;
+            }
+           
+        }
+        .container {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            width: 30%;
+            @media screen and (max-width: 768px) {
+                width: 80%;
+                margin: 1rem 0;
+            }
+            .navbar-nav {
+                width: 100%;
+                li {
+                    a {
+                        color: #2f2e3f;
+                        cursor: pointer;
+                    }
+                    &:after {
+                        content: ' ';
+                        width: 0;
+                        height: 2px;
+                        background: #e76321;
+                        display: block;
+                        z-index: 10;
+                        transition: width .1s ease-in-out;
+                        position: absolute;
+                        bottom: -1px;
+                        left: 50%;
+                        transform: translate(-50%,0);
+                    }
+                }
+                .active{
+                    background-color: #e76321;
+                    border-radius: 0.2rem;
+                    padding: 0 0.3rem;
+                    
+                    // border-bottom: 2px solid #0dA1BC;
+                    // font-weight: bold;
+                    a {
+                        color: #fff;
+                    }
+                }
+               
+            }
+        }
+    }
+
+    .tool {
+        position: absolute;
+        right: 5rem;
+        font-size: 1rem;
+
+        @media screen and (max-width: 768px) {
+            top: -2.5rem;
+            right: 2rem;
+            font-size: 0.4rem;
+        }
+    }
+    
+}
+
+.section-banner {
+    position: relative;
+    width: 100%;
+    background: linear-gradient(79deg, #26295C  0%, #404EA5 100%);
+    border-top: 1px solid red;
+    color: #fff;
+    padding: 5rem 20%;
+    @media screen and (max-width: 768px) { 
+        padding: 2rem 10%;
+    }
+    
+    p{
+        font-size: 1.3rem;
+        @media screen and (max-width: 768px) { 
+            font-size: 1rem;
+        }
+    }
+
+}
+
+.section-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem 20%;
+    margin-bottom: 5rem;
+    @media screen and (max-width: 768px) { 
+        padding: 1rem 10%;
+    }
+    img {
+        width: 100%;
+    }
+}
+
+footer {
+    width: 100%;
+    background-color: #E0E2E4;
+    text-align: center;
+    color: #6A6A6C;
+    padding-top: 15px;
+    @media screen and (max-width: 768px) { 
+        position: fixed;
+        bottom: 0;
+    }
+    .f-bottom {
+        font-size: 0.5rem;
+        width: 100%;
+        padding: 1rem 1rem;
+        background-color: #E0E2E4;
+        line-height: 2rem;
+    }
+}
+
